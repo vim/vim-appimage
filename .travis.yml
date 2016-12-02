@@ -9,7 +9,7 @@ compiler:
 
 env:
   - FEATURES=huge SRCDIR=vim/src
-    "CONFOPT='--enable-perlinterp --enable-pythoninterp --enable-python3interp --enable-rubyinterp --enable-luainterp --prefix=/usr'"
+    "CONFOPT='--enable-perlinterp --enable-pythoninterp --enable-python3interp --enable-rubyinterp --enable-luainterp --enable-tclinterp --prefix=/usr'"
 
 # sudo required to build AppImage (does apparently enable FUSE extensions)
 sudo: required
@@ -39,9 +39,18 @@ script:
   - NPROC=$(getconf _NPROCESSORS_ONLN)
   - (cd ${SRCDIR} && ./configure --with-features=$FEATURES $CONFOPT --enable-fail-if-missing &&  make -j$NPROC )
   - ${SRCDIR}/vim --version
-  - make $SHADOWOPT $TEST
 
 after_success:
   - bash -ex scripts/appimage.sh || true
+
+deploy:
+  provider: releases
+  api-key:
+    secure: "GrTph8SOjAL6WJphl3X4iqZnVJ7ZwRCn1Ef2g2zrOKJC25MPsptOVWuaJPk90hYbfXlHTZnRRpZe4ZOkAIZxEkcX35tqux3nSifgdTc565VXk/xX4mplCXXOANG7L4ksZFf/tRUHg3JSaJyuA+amaC9qnGp1d+3Dhg2iXpPqmcbvP3halWZZJfieZhuGJ0UGfVSYxUX8M+FL4Q2o0nFWdL9NlwWTgz2jcL50G3jSKmzv3A+e3DK8a2PquEmoV/KBaRnbfMjoiY40gbAB94ogyLPtCBXaxAIGEmFuuCPEesmbAUoTKJBJObMmEKRIHwZwj43O/wQY04+C6xy3IPFrPIZ5nBV1iu/bZIX+2FeEXw2O6vOnysz9LLBwyEG6QWGfnFscPJbrm3A1z/oopyqY8acIUAybteF99HMuPHypF4vRpil9oRt5RAgBuHfpEU82o7K1Mzy+OZQojbAv9qjq7Opx8emKdErJIsKonSg62RyUrh++018mPKmT8xLWI3fWjTz8SFNpdd28AnnnjWE43amyg3wNsbgdE/bJxdSy7kyz1esdk/nAEAnzwNqI7vSNnTCghkZBLmUiPmnmJ2cLM2fVV5FZS91hFd3Ya3comnXuTm6fjWtAxzx0B+4Xbca63NE0qKHUi0cQo7pz6kR0k2+O5eUUqzwdSdDE3X1Yu9Y="
+  file: "*.AppImage"
+  file_glob: true
+  skip_cleanup: true
+  #  on:
+  #  tags: true
 
 # vim:set sts=2 sw=2 tw=0 et:

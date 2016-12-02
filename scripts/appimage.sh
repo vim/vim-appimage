@@ -11,6 +11,7 @@ export ARCH="$(arch)"
 APP=GVim
 LOWERAPP=${APP,,}
 
+cd vim
 GIT_REV="$(git rev-parse --short HEAD)"
 
 VIM_VER="$(git describe --tags --abbrev=0)"
@@ -112,8 +113,9 @@ find ./usr/bin -type l \! -name "gvim" -delete || true
 
 cd .. # Go out of AppImage
 
-mkdir -p ../out/
 generate_appimage
+
+cp ../out/*.AppImage "$TRAVIS_BUILD_DIR"
 
 ########################################################################
 # Upload the AppDir
