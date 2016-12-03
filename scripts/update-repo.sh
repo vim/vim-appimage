@@ -39,6 +39,6 @@ if git diff --exit-code > /dev/null; then
 fi
 
 # Commit the change and push it
-git commit -a -m "Vim: $vimver" -m "$vimlog"
+git commit -a -m "Vim: $vimver"
 git tag $vimver
 git push origin master --tags
