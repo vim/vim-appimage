@@ -1,17 +1,17 @@
 #!/bin/sh
-set -x
+#set -x
 
 # Work directory of this repository.
 if [ "$1" != "" ]; then
-	workdir=$1
+    workdir=$1
 else
-	workdir=.
+    workdir=.
 fi
 
 cd $workdir
 if [ ! -f .travis.yml ]; then
-	echo "Wrong directory."
-	exit 1
+    echo "Wrong directory."
+    exit 1
 fi
 
 # older git does not know about --no-edit for git-pull
@@ -20,9 +20,9 @@ fi
 git pull
 
 if [ ! -d vim/src ]; then
-	git submodule init
+    git submodule init
 fi
-#git submodule update
+git submodule update
 
 # Get the latest vim source code
 cd vim
@@ -34,8 +34,8 @@ cd -
 
 # Check if it is updated
 if git diff --exit-code > /dev/null; then
-	echo "No changes found."
-	exit 0
+    echo "No changes found."
+    exit 0
 fi
 
 # Commit the change and push it
