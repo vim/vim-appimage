@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/chrisbra/vim-appimage.svg?branch=master)](https://travis-ci.org/chrisbra/vim-appimage)
+
 # Vim Appimage Repository
 
 This is a project for building a 64bit Gvim Appimage from the latest Vim snapshots.
