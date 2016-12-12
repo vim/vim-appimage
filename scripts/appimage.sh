@@ -11,6 +11,13 @@ export ARCH="$(arch)"
 APP=GVim
 LOWERAPP=${APP,,}
 
+TAG=$(git describe --exact-match --tags HEAD 2> /dev/null)
+RE="^untagged-.*"
+if [[ $? != 0  ||  "$TAG" =~ "$RE" ]]; then
+    echo  "non-tag commit"
+    exit
+fi
+
 cd vim
 GIT_REV="$(git rev-parse --short HEAD)"
 
