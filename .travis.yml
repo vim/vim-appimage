@@ -50,7 +50,7 @@ deploy:
   file: "*.AppImage"
   file_glob: true
   skip_cleanup: true
-  on:
-    tags: true
+  #  on:
+  #  tags: true
 
 # vim:set sts=2 sw=2 tw=0 et:
