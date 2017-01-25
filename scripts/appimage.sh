@@ -56,13 +56,13 @@ get_apprun
 
 get_desktop
 
-find "${SOURCE_DIR}" -name "vim48x48.png" -exec cp {} "${LOWERAPP}.png" \;
+find "${SOURCE_DIR}" -name "vim48x48.png" -xdev -exec cp {} "${LOWERAPP}.png" \;
 
 mkdir -p ./usr/lib/x86_64-linux-gnu
 # copy custom libruby.so 1.9
-find $HOME/.rvm/ -name "libruby.so.1.9" -exec cp {} ./usr/lib/x86_64-linux-gnu/ \;
+find $HOME/.rvm/ -name "libruby.so.1.9" -xdev -exec cp {} ./usr/lib/x86_64-linux-gnu/ \; || true
 # add libncurses5
-find / -name "libncurses.so.5" -exec cp -v -rfL {} ./usr/lib/x86_64-linux-gnu/ \;
+find /lib -name "libncurses.so.5" -xdev -exec cp -v -rfL {} ./usr/lib/x86_64-linux-gnu/ \; || true
 
 # copy dependencies
 copy_deps
