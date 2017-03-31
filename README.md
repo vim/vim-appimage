@@ -10,7 +10,7 @@ information about the package format see here: [AppImage](https://appimage.org).
 The image is based on Ubuntu 12.04 LTS precise. It most likely won't work on older distributions.
 
 [Download](https://github.com/vim/vim-appimage/releases) and execute the
-most recent `gvim-8.0.X_*.appimage` file to install Vim.
+most recent `GVim-8.0.X_*.AppImage` file to install Vim.
 
 If you need a dynamic interface to Perl, Python2, Python3, Ruby or Lua make
 sure your system provides the needed dynamic libraries (e.g. libperlX,
@@ -18,7 +18,7 @@ libpython2.7 libpython3X liblua5.1 and libruby1.9X) as those are **not**
 distributed together with the image to not make the image too large.
 
 However, Vim will work without those libraries, but some Plugin might need those additional dependency.
-(e.g. Gundo needs a working Pyhton2 installation, Command-T needs a working Ruby
+(e.g. Gundo needs a working Python2 installation, Command-T needs a working Ruby
 installation and Neocomplete needs a working Lua installation). This means,
 those interpreters have to be installed in addition to Vim. Without it Vim
 won't be able to use that feature!
