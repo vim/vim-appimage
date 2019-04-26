@@ -21,13 +21,6 @@ fi
 APP=GVim
 LOWERAPP=${APP,,}
 
-#RE="^untagged-.*"
-#TAG=$(git describe --exact-match --tags HEAD 2> /dev/null)
-#if [[ $? != 0  ||  "$TAG" =~ $RE ]]; then
-#    echo  "non-tag commit"
-#    exit
-#fi
-
 cd vim || exit 1
 GIT_REV="$(git rev-parse --short HEAD)"
 
@@ -111,9 +104,6 @@ if [ -n "$TRAVIS" ]; then
     echo "**GVim $VIM_VER** - git $GIT_REV - glibc $GLIBC_NEEDED" > "$TRAVIS_BUILD_DIR/release.body"
 fi
 
-
-
-
 ########################################################################
 # Patch away absolute paths; it would be nice if they were relative
 ########################################################################
@@ -137,10 +127,16 @@ find ./usr/bin -type l \! -name "gvim" -delete || true
 # Patch gvim.desktop file and copy start script
 ########################################################################
 
-cp "$script_dir/gvim.start.sh"  ./usr/bin
-chmod +x ./usr/bin/gvim.start.sh
+# clean up duplicate entries
+sed -i '0,/^GenericName\[de\]/{/^GenericName\[de\]/d;}' gvim.desktop
+sed -i '0,/^Comment\[de\]/{/^Comment\[de\]/d;}' gvim.desktop
+
+# change Exec line to script
 sed -i 's/^Exec=gvim.*$/Exec=gvim.start.sh %F/' gvim.desktop
 
+# copy script
+cp "$script_dir/gvim.start.sh"  ./usr/bin
+chmod +x ./usr/bin/gvim.start.sh
 
 ########################################################################
 # AppDir complete
@@ -149,7 +145,31 @@ sed -i 's/^Exec=gvim.*$/Exec=gvim.start.sh %F/' gvim.desktop
 
 cd ..  # Go out of AppImage
 
-generate_appimage
+
+URL="https://github.com/AppImage/AppImageKit/releases/download/11/appimagetool-${SYSTEM_ARCH}.AppImage"
+wget -c "$URL" -O AppImageAssistant
+chmod a+x ./AppImageAssistant
+
+BIN=$(find . -name *.so* -type f | head -n 1)
+INFO=$(file "$BIN")
+if [ -z $ARCH ] ; then
+if [[ $INFO == *"x86-64"* ]] ; then
+    ARCH=x86_64
+elif [[ $INFO == *"i686"* ]] ; then
+    ARCH=i686
+elif [[ $INFO == *"armv6l"* ]] ; then
+    ARCH=armhf
+else
+    echo "Could not automatically detect the architecture."
+    echo "Please set the \$ARCH environment variable."
+    exit 1
+fi
+fi
+
+mkdir -p ../out || true
+rm ../out/$APP"-"$VERSION".glibc"$GLIBC_NEEDED"-"$ARCH".AppImage" 2>/dev/null || true
+GLIBC_NEEDED=$(glibc_needed)
+./AppImageAssistant ./$APP.AppDir/ ../out/$APP"-"$VERSION".glibc"$GLIBC_NEEDED"-"$ARCH".AppImage"
 
 if [ -n "$TRAVIS" ]; then
     echo "Copy " "$BUILD_BASE"/out/*.AppImage " -> $TRAVIS_BUILD_DIR"
