@@ -1,5 +1,7 @@
 #!/bin/bash
 
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+
 ########################################################################
 # Package the baries built on Travis-CI as an AppImage
 # By Simon Peter 2016
@@ -8,30 +10,38 @@
 
 export ARCH="$(arch)"
 
+if [ -n "$TRAVIS" ]; then
+    echo "Travis detected"
+    BUILD_BASE=$HOME
+else
+    BUILD_BASE="$script_dir/../build"
+    mkdir -p "$BUILD_BASE"
+fi
+
 APP=GVim
 LOWERAPP=${APP,,}
 
-TAG=$(git describe --exact-match --tags HEAD 2> /dev/null)
-RE="^untagged-.*"
-if [[ $? != 0  ||  "$TAG" =~ "$RE" ]]; then
-    echo  "non-tag commit"
-    exit
-fi
+#RE="^untagged-.*"
+#TAG=$(git describe --exact-match --tags HEAD 2> /dev/null)
+#if [[ $? != 0  ||  "$TAG" =~ $RE ]]; then
+#    echo  "non-tag commit"
+#    exit
+#fi
 
-cd vim
+cd vim || exit 1
 GIT_REV="$(git rev-parse --short HEAD)"
 
 VIM_VER="$(git describe --tags --abbrev=0)"
 
 SOURCE_DIR="$(git rev-parse --show-toplevel)"
-make install DESTDIR=/home/travis/$APP/$APP.AppDir
+make install DESTDIR="$BUILD_BASE/$APP/$APP.AppDir"
 
-cd $HOME/$APP/
+cd "$BUILD_BASE/$APP/" || exit 1
 
 wget -q https://github.com/probonopd/AppImages/raw/master/functions.sh -O ./functions.sh
 . ./functions.sh
 
-cd $APP.AppDir
+cd $APP.AppDir || exit 1
 
 # Also needs grep for gvim.wrapper
 cp /bin/grep ./usr/bin
@@ -60,7 +70,7 @@ find "${SOURCE_DIR}" -name "vim48x48.png" -xdev -exec cp {} "${LOWERAPP}.png" \;
 
 mkdir -p ./usr/lib/x86_64-linux-gnu
 # copy custom libruby.so 1.9
-find $HOME/.rvm/ -name "libruby.so.1.9" -xdev -exec cp {} ./usr/lib/x86_64-linux-gnu/ \; || true
+find "$HOME/.rvm/" -name "libruby.so.1.9" -xdev -exec cp {} ./usr/lib/x86_64-linux-gnu/ \; || true
 # add libncurses5
 find /lib -name "libncurses.so.5" -xdev -exec cp -v -rfL {} ./usr/lib/x86_64-linux-gnu/ \; || true
 
@@ -112,19 +122,31 @@ rmdir ./usr/lib64 || true
 rm -rf ./usr/bin/*tutor* || true
 rm -rf ./usr/share/doc || true
 #rm -rf ./usr/bin/vim || true
-# remove unneded links
+# remove unneeded links
 find ./usr/bin -type l \! -name "gvim" -delete || true
+
+########################################################################
+# Patch gvim.desktop file and copy start script
+########################################################################
+
+cp "$script_dir/gvim.start.sh"  ./usr/bin
+chmod +x ./usr/bin/gvim.start.sh
+sed -i 's/^Exec=gvim.*$/Exec=gvim.start.sh %F/' gvim.desktop
+
 
 ########################################################################
 # AppDir complete
 # Now packaging it as an AppImage
 ########################################################################
 
-cd .. # Go out of AppImage
+cd ..  # Go out of AppImage
 
 generate_appimage
 
-cp ../out/*.AppImage "$TRAVIS_BUILD_DIR"
+if [ -n "$TRAVIS" ]; then
+    echo "Copy " "$BUILD_BASE"/out/*.AppImage " -> $TRAVIS_BUILD_DIR"
+    cp "$BUILD_BASE"/out/*.AppImage "$TRAVIS_BUILD_DIR"
+fi
 
 ########################################################################
 # Upload the AppDir

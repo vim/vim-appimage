@@ -43,8 +43,7 @@ after_success:
 
 deploy:
   provider: releases
-  api-key:
-    secure: KMER+Njo7lIQInBVGpqvBJqFCb8hxLYlOCC2jyleYzyo+cDZTXe/qNuBSXdTvAx8+WBCTyo/ZsEhsmDyR0a0C/3UxowXiKel8sOYw0STvLGg9IW9E1+gLCvkhc2M8zRSDFaPHBezsPFWxuqDkZAxzXCKfDpSk0bsRkYZHDums8aUvOAbTrp6tJpu5MaPOqOyrBcuvb2C442T94k1gEUJ/UtStZjyUN+6X3eKO9U24pwTUjPoNXOsOEFQktCRdV7w25B9OsivgNObswa27DiKjm1GGBmVXQPUmo2ft3G/GdQbdO8B0t/0DsIRTnLsCfH0jOXSx8ntrQLn6baJ1dF6wCin7Z9fb38z+MXeo/Ki8rx14j3/Jfle4WSQgOsXcuDEX2fhw18YIuNGe4ScOFrFZRgt2YSO+EFunRMpRgifA0UoPgS2u7qlQjH1N8R/StG1EumuP3zAs+jZkukDiUKS7QJ58yi/iQJsAwJUGHPHn/NjByaT+OPg6Lc8ubkxZ70kNfD75su6eM7csbS5vrSIhkNpOKpjTZWO33CKuT0ux5j4IJrLBwtwXEQINyhJCkbYXGYZzuywY3if+tDalj3Dq/8HzLVZg0XVlxBMEOmeDaff5kbfNjLk/gzhGHLhfB2lGJstU16gTiXJxmtSkcurmPcJJQVNPD1QvAYfTIwa2OY=
+  api-key: $API_TOKEN
   file: "*.AppImage"
   file_glob: true
   skip_cleanup: true
