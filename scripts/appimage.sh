@@ -146,6 +146,7 @@ generate_appimage
 if [ -n "$TRAVIS" ]; then
     echo "Copy " "$BUILD_BASE"/out/*.AppImage " -> $TRAVIS_BUILD_DIR"
     cp "$BUILD_BASE"/out/*.AppImage "$TRAVIS_BUILD_DIR"
+    cp "$BUILD_BASE"/out/GVim-$VERSION-$ARCH.AppImage "$TRAVIS_BUILD_DIR/gvim.appimage"
 fi
 
 ########################################################################
