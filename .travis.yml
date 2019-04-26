@@ -47,12 +47,14 @@ before_deploy:
   - git config --local user.email "TRAVIS-BUILD"
   - export TRAVIS_TAG=$(cd vim && git describe --tags --abbrev=0)
   - git tag -f $TRAVIS_TAG
+  - RELEASE_BODY="$(cat $TRAVIS_BUILD_DIR/release.body)"
 
 deploy:
   - provider: releases
     api-key: $API_TOKEN
     file: "*.AppImage"
     file_glob: true
+    body: "$RELEASE_BODY"
     skip_cleanup: true
     #  on:
     #  tags: true

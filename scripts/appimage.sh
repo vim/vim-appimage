@@ -105,6 +105,14 @@ get_desktopintegration "$LOWERAPP"
 
 GLIBC_NEEDED=$(glibc_needed)
 VERSION=$VIM_VER-git$GIT_REV-glibc$GLIBC_NEEDED
+VERSION=$VIM_VER
+
+if [ -n "$TRAVIS" ]; then
+    echo "**GVim $VIM_VER** - git $GIT_REV - glibc $GLIBC_NEEDED" > "$TRAVIS_BUILD_DIR/release.body"
+fi
+
+
+
 
 ########################################################################
 # Patch away absolute paths; it would be nice if they were relative
