@@ -8,8 +8,7 @@ compiler:
   - gcc
 
 env:
-  - FEATURES=huge SRCDIR=vim/src
-    "CONFOPT='--enable-gui=gtk2 --enable-perlinterp --enable-pythoninterp --enable-python3interp --enable-rubyinterp --enable-luainterp --enable-tclinterp --prefix=/usr'"
+  - SRCDIR=vim/src
 
 # sudo required to build AppImage (does apparently enable FUSE extensions)
 sudo: required
@@ -41,10 +40,11 @@ addons:
 before_install:
     # make sure to use default 1.9.3 ruby (switching sudo on, does add different ruby versions, GRR!)
   - rvm use 1.9.3 --install --binary --fuzzy
+    # Update Vim
+  - (cd vim && git checkout master && git pull)
 
 script:
-  - NPROC=$(getconf _NPROCESSORS_ONLN)
-  - (cd ${SRCDIR} && ./configure --with-features=$FEATURES $CONFOPT --enable-fail-if-missing &&  make -j$NPROC )
+  - make_vim.sh
   - ${SRCDIR}/vim --version
 
 after_success:
@@ -63,6 +63,7 @@ deploy:
     api-key: $API_TOKEN
     file: "*.AppImage"
     file_glob: true
+    overwrite: true
     body: "$RELEASE_BODY"
     skip_cleanup: true
     #  on:
