@@ -3,10 +3,15 @@
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 
 ########################################################################
-# Package the baries built on Travis-CI as an AppImage
+# Package the binaries built on Travis-CI as an AppImage
 # By Simon Peter 2016
 # For more information, see http://appimage.org/
 ########################################################################
+
+APP=GVim
+LOWERAPP=${APP,,}
+
+AppImageKitVersion=11
 
 export ARCH="$(arch)"
 
@@ -18,10 +23,8 @@ else
     mkdir -p "$BUILD_BASE"
 fi
 
-APP=GVim
-LOWERAPP=${APP,,}
-
 cd vim || exit 1
+
 GIT_REV="$(git rev-parse --short HEAD)"
 
 VIM_VER="$(git describe --tags --abbrev=0)"
@@ -55,7 +58,11 @@ cp /bin/grep ./usr/bin
 # Copy desktop and icon file to AppDir for AppRun to pick them up
 ########################################################################
 
-get_apprun
+
+# Don't use `get_apprun`, as we want to specify the AppImageKit version.
+# get_apprun
+wget -c "https://github.com/AppImage/AppImageKit/releases/download/${AppImageKitVersion}/AppRun-${ARCH}" -O AppRun
+chmod a+x AppRun
 
 get_desktop
 
@@ -85,12 +92,6 @@ find . -name "libX*" -delete
 # Delete dangerous libraries; see
 # https://github.com/probonopd/AppImages/blob/master/excludelist
 delete_blacklisted
-
-########################################################################
-# desktopintegration asks the user on first run to install a menu item
-########################################################################
-
-get_desktopintegration "$LOWERAPP"
 
 ########################################################################
 # Determine the version of the app; also include needed glibc version
@@ -127,16 +128,15 @@ find ./usr/bin -type l \! -name "gvim" -delete || true
 # Patch gvim.desktop file and copy start script
 ########################################################################
 
-# clean up duplicate entries
-sed -i '0,/^GenericName\[de\]/{/^GenericName\[de\]/d;}' gvim.desktop
-sed -i '0,/^Comment\[de\]/{/^Comment\[de\]/d;}' gvim.desktop
+# Remove localized keys before the translated section (might result in duplicates)
+sed -i '0,/^# The translations should come from the po file./{/^.*\]=/d;}' gvim.desktop
 
 # change Exec line to script
-sed -i 's/^Exec=gvim.*$/Exec=gvim.start.sh %F/' gvim.desktop
+sed -i 's/^Exec=gvim.*$/Exec=vim.start.sh %F/' gvim.desktop
 
 # copy script
-cp "$script_dir/gvim.start.sh"  ./usr/bin
-chmod +x ./usr/bin/gvim.start.sh
+cp "$script_dir/vim.start.sh"  ./usr/bin
+chmod +x ./usr/bin/vim.start.sh
 
 ########################################################################
 # AppDir complete
@@ -145,36 +145,37 @@ chmod +x ./usr/bin/gvim.start.sh
 
 cd ..  # Go out of AppImage
 
+# Don't use `generate_appimage` from function.sh, as we want to work with
+# AppImageKit V11. The function `generate_appimage` is hardcoded to V6.
 
-URL="https://github.com/AppImage/AppImageKit/releases/download/11/appimagetool-${SYSTEM_ARCH}.AppImage"
+URL="https://github.com/AppImage/AppImageKit/releases/download/${AppImageKitVersion}/appimagetool-${SYSTEM_ARCH}.AppImage"
 wget -c "$URL" -O AppImageAssistant
 chmod a+x ./AppImageAssistant
 
-BIN=$(find . -name *.so* -type f | head -n 1)
+BIN=$(find . -name \*.so\* -type f | head -n 1)
 INFO=$(file "$BIN")
-if [ -z $ARCH ] ; then
-if [[ $INFO == *"x86-64"* ]] ; then
-    ARCH=x86_64
-elif [[ $INFO == *"i686"* ]] ; then
-    ARCH=i686
-elif [[ $INFO == *"armv6l"* ]] ; then
-    ARCH=armhf
-else
-    echo "Could not automatically detect the architecture."
-    echo "Please set the \$ARCH environment variable."
-    exit 1
-fi
+if [ -z "$ARCH" ] ; then
+    if [[ $INFO == *"x86-64"* ]] ; then
+        ARCH=x86_64
+    elif [[ $INFO == *"i686"* ]] ; then
+        ARCH=i686
+    elif [[ $INFO == *"armv6l"* ]] ; then
+        ARCH=armhf
+    else
+        echo "Could not automatically detect the architecture."
+        echo "Please set the \$ARCH environment variable."
+        exit 1
+    fi
 fi
 
-mkdir -p ../out || true
-rm ../out/$APP"-"$VERSION".glibc"$GLIBC_NEEDED"-"$ARCH".AppImage" 2>/dev/null || true
+mkdir -p "$BUILD_BASE/out" || true
+rm "$BUILD_BASE/out/$APP-$VERSION.glibc$GLIBC_NEEDED-$ARCH.AppImage" 2>/dev/null || true
 GLIBC_NEEDED=$(glibc_needed)
-./AppImageAssistant ./$APP.AppDir/ ../out/$APP"-"$VERSION".glibc"$GLIBC_NEEDED"-"$ARCH".AppImage"
+./AppImageAssistant ./$APP.AppDir/ "../out/$APP-$VERSION.glibc$GLIBC_NEEDED-$ARCH.AppImage"
 
 if [ -n "$TRAVIS" ]; then
     echo "Copy " "$BUILD_BASE"/out/*.AppImage " -> $TRAVIS_BUILD_DIR"
     cp "$BUILD_BASE"/out/*.AppImage "$TRAVIS_BUILD_DIR"
-    cp "$BUILD_BASE"/out/GVim-$VERSION-$ARCH.AppImage "$TRAVIS_BUILD_DIR/gvim.appimage"
 fi
 
 ########################################################################

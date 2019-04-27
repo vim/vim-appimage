@@ -44,7 +44,7 @@ before_install:
   - (cd vim && git checkout master && git pull)
 
 script:
-  - make_vim.sh
+  - ./make_vim.sh
   - ${SRCDIR}/vim --version
 
 after_success:
