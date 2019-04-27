@@ -102,7 +102,7 @@ VERSION=$VIM_VER-git$GIT_REV-glibc$GLIBC_NEEDED
 VERSION=$VIM_VER
 
 if [ -n "$TRAVIS" ]; then
-    echo "**GVim $VIM_VER** - git $GIT_REV - glibc $GLIBC_NEEDED" > "$TRAVIS_BUILD_DIR/release.body"
+    echo "**GVim $VIM_VER** - git $GIT_REV - glibc $GLIBC_NEEDED - [Travis Build]($TRAVIS_BUILD_WEB_URL)" >  "$TRAVIS_BUILD_DIR/release.body"
 fi
 
 ########################################################################
