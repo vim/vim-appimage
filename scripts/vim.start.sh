@@ -1,7 +1,11 @@
 #!/bin/sh
 
-export VIM=$APPDIR/usr/share/vim
-export VIMRUNTIME=$APPDIR/usr/share/vim/vim81
+if [ -z "$VIM" ]; then
+    export VIM=$APPDIR/usr/share/vim
+fi
+if [ -z "$VIMRUNTIME" ]; then
+    export VIMRUNTIME=$APPDIR/usr/share/vim/vim81
+fi
 
 # We don't pack Python stuff, so unset the PYTHON vars set by AppRun.
 # see https://github.com/AppImage/AppImageKit/blob/master/src/AppRun.c
