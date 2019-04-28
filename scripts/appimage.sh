@@ -137,8 +137,11 @@ find ./usr/bin -type l \! -name "gvim" -delete || true
 # Patch gvim.desktop file and copy start script
 ########################################################################
 
-# Remove localized keys before the translated section (might result in duplicates)
-sed -i '0,/^# The translations should come from the po file./{/^.*\]=/d;}' gvim.desktop
+# Remove duplicate keys from desktop file. This might occure while localisation
+# for the desktop file is progressing.
+mv gvim.desktop gvim.desktop.org
+awk '{x=$0; sub(/=.*$/, "", x);if(!seen[x]++){print $0}}' gvim.desktop.org > gvim.desktop
+rm gvim.desktop.org
 
 # change Exec line to script
 sed -i 's/^Exec=gvim.*$/Exec=vim.start.sh %F/' gvim.desktop
