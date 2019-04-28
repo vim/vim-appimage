@@ -40,6 +40,11 @@ addons:
 before_install:
     # make sure to use default 1.9.3 ruby (switching sudo on, does add different ruby versions, GRR!)
   - rvm use 1.9.3 --install --binary --fuzzy
+    # Really checkout the current branch (needed for commit/push later)
+  - git checkout $TRAVIS_BRANCH
+    # Update Vim
+  - (cd vim && git checkout master && git pull)
+  - export TRAVIS_TAG=$(cd vim && git describe --tags --abbrev=0)
 
 script:
   - scripts/build_vim.sh
@@ -48,14 +53,32 @@ script:
 after_success:
   - bash -ex scripts/appimage.sh || true
 
+before_deploy:
+  # Set up git user name and tag this commit
+  - git config --local user.name "Travis CI"
+  - git config --local user.email "travis@travis-ci.org"
+  - export VIM_SUMMARY="$(git submodule summary vim)"
+  - echo "Adding new remote..."
+  - git remote add push-origin https://$API_TOKEN@github.com/${TRAVIS_REPO_SLUG}.git
+  - git remote -vv
+  - echo "Committing..."
+  - "[ -n \"$VIM_SUMMARY\" ] && (git commit -m \"Vim: $TRAVIS_TAG\" -m \"$VIM_SUMMARY\" -m \"$TRAVIS_BUILD_WEB_URL\" vim)"
+  - echo "Tagging..."
+  - "git tag -f $TRAVIS_TAG -m \"Vim: $TRAVIS_TAG\""
+  - echo "Pushing..."
+  - git push --follow-tags -u push-origin $TRAVIS_BRANCH
+  - RELEASE_BODY="$(cat $TRAVIS_BUILD_DIR/release.body)"
+
 deploy:
-  provider: releases
-  api-key:
-    secure: KMER+Njo7lIQInBVGpqvBJqFCb8hxLYlOCC2jyleYzyo+cDZTXe/qNuBSXdTvAx8+WBCTyo/ZsEhsmDyR0a0C/3UxowXiKel8sOYw0STvLGg9IW9E1+gLCvkhc2M8zRSDFaPHBezsPFWxuqDkZAxzXCKfDpSk0bsRkYZHDums8aUvOAbTrp6tJpu5MaPOqOyrBcuvb2C442T94k1gEUJ/UtStZjyUN+6X3eKO9U24pwTUjPoNXOsOEFQktCRdV7w25B9OsivgNObswa27DiKjm1GGBmVXQPUmo2ft3G/GdQbdO8B0t/0DsIRTnLsCfH0jOXSx8ntrQLn6baJ1dF6wCin7Z9fb38z+MXeo/Ki8rx14j3/Jfle4WSQgOsXcuDEX2fhw18YIuNGe4ScOFrFZRgt2YSO+EFunRMpRgifA0UoPgS2u7qlQjH1N8R/StG1EumuP3zAs+jZkukDiUKS7QJ58yi/iQJsAwJUGHPHn/NjByaT+OPg6Lc8ubkxZ70kNfD75su6eM7csbS5vrSIhkNpOKpjTZWO33CKuT0ux5j4IJrLBwtwXEQINyhJCkbYXGYZzuywY3if+tDalj3Dq/8HzLVZg0XVlxBMEOmeDaff5kbfNjLk/gzhGHLhfB2lGJstU16gTiXJxmtSkcurmPcJJQVNPD1QvAYfTIwa2OY=
-  file: "*.AppImage"
-  file_glob: true
-  skip_cleanup: true
-  #  on:
-  #  tags: true
+  - provider: releases
+    api-key: $API_TOKEN
+    name: "Vim: $TRAVIS_TAG"
+    file: "*.AppImage"
+    file_glob: true
+    overwrite: true
+    body: "$RELEASE_BODY"
+    skip_cleanup: true
+    on:
+      tags: true
 
 # vim:set sts=2 sw=2 tw=0 et:
