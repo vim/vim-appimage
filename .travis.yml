@@ -62,7 +62,7 @@ before_deploy:
   - git remote add push-origin https://$API_TOKEN@github.com/${TRAVIS_REPO_SLUG}.git
   - git remote -vv
   - echo "Committing..."
-  - "[ -n \"$VIM_SUMMARY\" ] && (git commit -m \"Vim: $TRAVIS_TAG\" -m \"$VIM_SUMMARY\" -m \"$TRAVIS_BUILD_WEB_URL\" vim)"
+  - "[ -n \"$VIM_SUMMARY\" ] && git commit -m \"Vim: $TRAVIS_TAG\" -m \"$VIM_SUMMARY\" -m \"$TRAVIS_BUILD_WEB_URL\" -m \"[ci skip]\" vim"
   - echo "Tagging..."
   - "git tag -f $TRAVIS_TAG -m \"Vim: $TRAVIS_TAG\""
   - echo "Pushing..."
