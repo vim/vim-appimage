@@ -75,13 +75,13 @@ chmod a+x AppRun
 
 get_desktop
 
-find "${SOURCE_DIR}" -name "vim48x48.png" -xdev -exec cp {} "${LOWERAPP}.png" \;
+find "${SOURCE_DIR}" -xdev -name "vim48x48.png"  -exec cp {} "${LOWERAPP}.png" \;
 
 mkdir -p ./usr/lib/x86_64-linux-gnu
 # copy custom libruby.so 1.9
-find "$HOME/.rvm/" -name "libruby.so.1.9" -xdev -exec cp {} ./usr/lib/x86_64-linux-gnu/ \; || true
+find "$HOME/.rvm/" -xdev -name "libruby.so.1.9" -exec cp {} ./usr/lib/x86_64-linux-gnu/ \; || true
 # add libncurses5
-find /lib -name "libncurses.so.5" -xdev -exec cp -v -rfL {} ./usr/lib/x86_64-linux-gnu/ \; || true
+find /lib -xdev -name "libncurses.so.5" -exec cp -v -rfL {} ./usr/lib/x86_64-linux-gnu/ \; || true
 
 # copy dependencies
 copy_deps
@@ -183,11 +183,18 @@ fi
 mkdir -p "$BUILD_BASE/out" || true
 rm "$BUILD_BASE/out/$APP-$VERSION.glibc$GLIBC_NEEDED-$ARCH.AppImage" 2>/dev/null || true
 GLIBC_NEEDED=$(glibc_needed)
-./AppImageAssistant ./$APP.AppDir/ "../out/$APP-$VERSION.glibc$GLIBC_NEEDED-$ARCH.AppImage"
+
+TARGET_NAME="$APP-$VERSION.glibc$GLIBC_NEEDED-$ARCH.AppImage"
+
+./AppImageAssistant ./$APP.AppDir/ "../out/$TARGET_NAME"
 
 if [ -n "$TRAVIS" ]; then
-    echo "Copy " "$BUILD_BASE"/out/*.AppImage " -> $TRAVIS_BUILD_DIR"
-    cp "$BUILD_BASE"/out/*.AppImage "$TRAVIS_BUILD_DIR"
+    echo "Copy $BUILD_BASE/out/$TARGET_NAME -> $TRAVIS_BUILD_DIR"
+    cp "$BUILD_BASE/out/$TARGET_NAME" "$TRAVIS_BUILD_DIR"
+    # use lowercase "appimage" here, so it is not picked up by travis deploy
+    ln -s "$TRAVIS_BUILD_DIR/$TARGET_NAME" "$TRAVIS_BUILD_DIR/vim.appimage"
+    ln -s "$TRAVIS_BUILD_DIR/$TARGET_NAME" "$TRAVIS_BUILD_DIR/gvim.appimage"
+
 fi
 
 ########################################################################

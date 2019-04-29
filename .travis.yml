@@ -47,12 +47,15 @@ before_install:
   - export VIM_SUMMARY="$(git submodule summary vim)"
   - "[ -n \"$VIM_SUMMARY\" ] && export TRAVIS_TAG=$(cd vim && git describe --tags --abbrev=0) || true"
 
+before_script:
+  - export DISPLAY=':99.0'
+  - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
 script:
   - scripts/build_vim.sh
   - ${SRCDIR}/vim --version
-
-after_success:
-  - bash -ex scripts/appimage.sh || true
+  - bash -ex scripts/appimage.sh
+  - make -C vim/src/testdir VIMPROG=$TRAVIS_BUILD_DIR/vim.appimage
 
 before_deploy:
   # Set up git user name and tag this commit
@@ -77,5 +80,9 @@ deploy:
     skip_cleanup: true
     on:
       tags: true
+
+after_script:
+  # workaround for truncated output
+  - sleep 10
 
 # vim:set sts=2 sw=2 tw=0 et:
