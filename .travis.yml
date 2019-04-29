@@ -44,7 +44,8 @@ before_install:
   - git checkout $TRAVIS_BRANCH
     # Update Vim
   - (cd vim && git checkout master && git pull)
-  - export TRAVIS_TAG=$(cd vim && git describe --tags --abbrev=0)
+  - export VIM_SUMMARY="$(git submodule summary vim)"
+  - "[ -n \"$VIM_SUMMARY\" ] && export TRAVIS_TAG=$(cd vim && git describe --tags --abbrev=0) || true"
 
 script:
   - scripts/build_vim.sh
@@ -57,16 +58,12 @@ before_deploy:
   # Set up git user name and tag this commit
   - git config --local user.name "Travis CI"
   - git config --local user.email "travis@travis-ci.org"
-  - export VIM_SUMMARY="$(git submodule summary vim)"
-  - echo "Adding new remote..."
   - git remote add push-origin https://$API_TOKEN@github.com/${TRAVIS_REPO_SLUG}.git
-  - git remote -vv
-  - echo "Committing..."
-  - "[ -n \"$VIM_SUMMARY\" ] && git commit -m \"Vim: $TRAVIS_TAG\" -m \"$VIM_SUMMARY\" -m \"$TRAVIS_BUILD_WEB_URL\" -m \"[ci skip]\" vim"
-  - echo "Tagging..."
-  - "git tag -f $TRAVIS_TAG -m \"Vim: $TRAVIS_TAG\""
-  - echo "Pushing..."
-  - git push --follow-tags -u push-origin $TRAVIS_BRANCH
+  - "[ -n \"$TRAVIS_TAG\" ] && echo \"Committing, Tagging and Pushing...\" || true"
+  - "[ -n \"$TRAVIS_TAG\" ] && git commit -m \"Vim: $TRAVIS_TAG\" -m \"$VIM_SUMMARY\" -m \"$TRAVIS_BUILD_WEB_URL\" -m \"[ci skip]\" vim || true"
+  - "[ -n \"$TRAVIS_TAG\" ] && git tag -f $TRAVIS_TAG -m \"Vim: $TRAVIS_TAG\" || true"
+  - "[ -n \"$TRAVIS_TAG\" ] && git push --follow-tags -u push-origin $TRAVIS_BRANCH || true"
+  - "[ -z \"$TRAVIS_TAG\" ] && echo \"Nothing to commit\" || true"
   - RELEASE_BODY="$(cat $TRAVIS_BUILD_DIR/release.body)"
 
 deploy:
