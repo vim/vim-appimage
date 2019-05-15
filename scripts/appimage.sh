@@ -107,11 +107,18 @@ delete_blacklisted
 ########################################################################
 
 GLIBC_NEEDED=$(glibc_needed)
-#VERSION=$VIM_VER-git$GIT_REV-glibc$GLIBC_NEEDED
 VERSION=$VIM_VER
 
 if [ -n "$TRAVIS" ]; then
-    echo "![Github Downloads (by Release)](https://img.shields.io/github/downloads/$TRAVIS_REPO_SLUG/$TRAVIS_TAG/total.svg) **GVim $VIM_VER** - git $GIT_REV - glibc $GLIBC_NEEDED - [Travis Build]($TRAVIS_BUILD_WEB_URL)" >  "$TRAVIS_BUILD_DIR/release.body"
+    # Create release file
+    cat > $TRAVIS_BUILD_DIR/release.body <<EOF
+![Github Downloads (by Release)](https://img.shields.io/github/downloads/$TRAVIS_REPO_SLUG/$TRAVIS_TAG/total.svg)
+
+Version Information:
+**GVim: $VIM_VER** - Vim git commit: [$GIT_REV](https://github.com/vim/vim/commit/$GIT_REV) - glibc: $GLIBC_NEEDED
+
+[Travis Build Logfile]($TRAVIS_BUILD_WEB_URL)
+EOF
 fi
 
 ########################################################################
