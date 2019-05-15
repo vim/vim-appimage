@@ -62,7 +62,7 @@ before_deploy:
   - sleep 10
   # Set up git user name and tag this commit
   - |
-    if [ -n "$TRAVIS_TAG" ]; then
+    if [ -n "$TRAVIS_TAG" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
       echo "Committing, Tagging and Pushing..."
       openssl aes-256-cbc -K $encrypted_62bc4630de43_key -iv $encrypted_62bc4630de43_iv -in scripts/github_deploy_key.enc -out github_deploy_key -d
       chmod 600 github_deploy_key
@@ -78,6 +78,7 @@ before_deploy:
       rm -f github_deploy_key
     else
       echo "Nothing to commit"
+      unset TRAVIS_TAG
     fi
   - RELEASE_BODY="$(cat $TRAVIS_BUILD_DIR/release.body)"
 
@@ -92,6 +93,8 @@ deploy:
     overwrite: true
     body: "$RELEASE_BODY"
     skip_cleanup: true
+    on:
+      tags: true
 
 after_script:
   # workaround for truncated output
