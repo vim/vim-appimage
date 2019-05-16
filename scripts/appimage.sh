@@ -120,6 +120,9 @@ Version Information:
 
 [Travis Build Logfile]($TRAVIS_BUILD_WEB_URL)
 EOF
+    # Travis cannot handle a multi-line release body,
+    # see https://github.com/travis-ci/dpl/issues/155
+    # so remove those newlines again
     tr -d '\n' < "$RELEASE_BODY" > "$RELEASE_BODY".1 && mv "$RELEASE_BODY".1 "$RELEASE_BODY"
 fi
 
