@@ -111,19 +111,14 @@ VERSION=$VIM_VER
 
 if [ -n "$TRAVIS" ]; then
     # Create release file
-    RELEASE_BODY=$TRAVIS_BUILD_DIR/release.body
-    cat > "$RELEASE_BODY" <<EOF
-![Github Downloads (by Release)](https://img.shields.io/github/downloads/$TRAVIS_REPO_SLUG/$TRAVIS_TAG/total.svg)
-
-Version Information:
-**GVim: $VIM_VER** - Vim git commit: [$GIT_REV](https://github.com/vim/vim/commit/$GIT_REV) - glibc: $GLIBC_NEEDED
-
-[Travis Build Logfile]($TRAVIS_BUILD_WEB_URL)
-EOF
     # Travis cannot handle a multi-line release body,
     # see https://github.com/travis-ci/dpl/issues/155
-    # so remove those newlines again
-    tr -d '\n' < "$RELEASE_BODY" > "$RELEASE_BODY".1 && mv "$RELEASE_BODY".1 "$RELEASE_BODY"
+    # so add a single line with <br> for the line breaks
+    dl_counter="![Github Downloads (by Release)](https://img.shields.io/github/downloads/$TRAVIS_REPO_SLUG/$TRAVIS_TAG/total.svg)"
+    version_info="**GVim: $VIM_VER** - Vim git commit: [$GIT_REV](https://github.com/vim/vim/commit/$GIT_REV) - glibc: $GLIBC_NEEDED"
+    travis_build="[Travis Build Logfile]($TRAVIS_BUILD_WEB_URL)"
+
+    echo "$dl_counter<br><br>Version Information:<br>$version_info<br><br>$travis_build" >  "$TRAVIS_BUILD_DIR/release.body"
 fi
 
 ########################################################################
