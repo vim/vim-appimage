@@ -111,7 +111,8 @@ VERSION=$VIM_VER
 
 if [ -n "$TRAVIS" ]; then
     # Create release file
-    cat > $TRAVIS_BUILD_DIR/release.body <<EOF
+    RELEASE_BODY=$TRAVIS_BUILD_DIR/release.body
+    cat > "$RELEASE_BODY" <<EOF
 ![Github Downloads (by Release)](https://img.shields.io/github/downloads/$TRAVIS_REPO_SLUG/$TRAVIS_TAG/total.svg)
 
 Version Information:
@@ -119,6 +120,7 @@ Version Information:
 
 [Travis Build Logfile]($TRAVIS_BUILD_WEB_URL)
 EOF
+    tr -d '\n' < "$RELEASE_BODY" > "$RELEASE_BODY".1 && mv "$RELEASE_BODY".1 "$RELEASE_BODY"
 fi
 
 ########################################################################
