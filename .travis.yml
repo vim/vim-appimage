@@ -39,7 +39,8 @@ addons:
 
 before_install:
     # make sure to use default 1.9.3 ruby (switching sudo on, does add different ruby versions, GRR!)
-  - rvm use 1.9.3 --install --binary --fuzzy
+    #  - rvm use 1.9.3 --install --binary --fuzzy
+    #  disabled, because rvm 1.9.3 is not available anymore
     # Really checkout the current branch (needed for commit/push later)
   - git checkout $TRAVIS_BRANCH
     # Update Vim
