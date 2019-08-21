@@ -58,7 +58,7 @@ script:
   - bash -ex scripts/appimage.sh
   - make -C vim/src/testdir VIMPROG=$TRAVIS_BUILD_DIR/vim.appimage
   # dump failed screen tests
-  - find vim/src/testdir/failed -type f -name "*.dump" -size +0 -exec sh -c 'for i; do echo "failed: " $i && cat $i && echo ""; done'  find-sh {} +
+  #- find vim/src/testdir/failed -type f -name "*.dump" -size +0 -exec sh -c 'for i; do echo "failed: " $i && cat $i && echo ""; done'  find-sh {} +
 
 before_deploy:
   # wait 10 secs to be sure the test output is printed
