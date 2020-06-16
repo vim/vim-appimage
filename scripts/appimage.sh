@@ -193,7 +193,7 @@ GLIBC_NEEDED=$(glibc_needed)
 
 TARGET_NAME="$APP-$VERSION.glibc$GLIBC_NEEDED-$ARCH.AppImage"
 
-./AppImageAssistant ./$APP.AppDir/ "../out/$TARGET_NAME"
+./AppImageAssistant -u "gh-releases-zsync|vim|vim-appimage|latest|GVim-*x86_64.AppImage.zsync" ./$APP.AppDir/ "../out/$TARGET_NAME"
 
 if [ -n "$TRAVIS" ]; then
     echo "Copy $BUILD_BASE/out/$TARGET_NAME -> $TRAVIS_BUILD_DIR"
