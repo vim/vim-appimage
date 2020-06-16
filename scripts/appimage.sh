@@ -198,6 +198,7 @@ TARGET_NAME="$APP-$VERSION.glibc$GLIBC_NEEDED-$ARCH.AppImage"
 if [ -n "$TRAVIS" ]; then
     echo "Copy $BUILD_BASE/out/$TARGET_NAME -> $TRAVIS_BUILD_DIR"
     cp "$BUILD_BASE/out/$TARGET_NAME" "$TRAVIS_BUILD_DIR"
+    cp "$BUILD_BASE/$APP/$TARGET_NAME.zsync" "$TRAVIS_BUILD_DIR"
     # use lowercase "appimage" here, so it is not picked up by travis deploy
     ln -s "$TRAVIS_BUILD_DIR/$TARGET_NAME" "$TRAVIS_BUILD_DIR/vim.appimage"
     ln -s "$TRAVIS_BUILD_DIR/$TARGET_NAME" "$TRAVIS_BUILD_DIR/gvim.appimage"
