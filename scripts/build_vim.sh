@@ -22,7 +22,13 @@ CFG_OPTS+=( "--prefix=/usr" )
 
 NPROC=$(getconf _NPROCESSORS_ONLN)
 
+# Apply experimental patches
+shopt -s nullglob
+pushd "${SRCDIR}"/..
+for i in ../patch/*.patch; do git apply -v "$i"; done
+popd
+shopt -u nullglob
+
 cd "${SRCDIR}"
 ./configure --with-features=$FEATURES "${CFG_OPTS[@]}" --enable-fail-if-missing
 make -j$NPROC
-
