@@ -59,7 +59,7 @@ script:
   - scripts/build_vim.sh
   - ${SRCDIR}/vim --version
   - bash -ex scripts/appimage.sh
-  - make -C vim/src/testdir VIMPROG=$TRAVIS_BUILD_DIR/vim.appimage
+  - make -C vim/src/testdir VIMPROG=$TRAVIS_BUILD_DIR/vim.appimage TEST_FILTER=test_sound
   # dump failed screen tests
   - scripts/dump_failed_screentests.sh
 
