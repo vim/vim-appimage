@@ -1,3 +1,14 @@
+diff --git a/ci/load-snd-dummy.sh b/ci/load-snd-dummy.sh
+index b0101b0f8..36f1b5ca3 100644
+--- a/ci/load-snd-dummy.sh
++++ b/ci/load-snd-dummy.sh
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-set -e
++set -ex
+ 
+ if ! modprobe snd-dummy; then
+     # snd-dummy is contained in linux-modules-extra (if exists)
 diff --git a/src/testdir/test_options.vim b/src/testdir/test_options.vim
 index 74f8d4c55..59054226f 100644
 --- a/src/testdir/test_options.vim
