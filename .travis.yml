@@ -1,7 +1,7 @@
 # Default OS image is Ubuntu 14.04 LTS Trusty on Travis-CI for linux
 language: c
 
-dist: trusty
+dist: bionic
 
 os:
   - linux
@@ -14,30 +14,30 @@ env:
 
 # sudo required to build AppImage (does apparently enable FUSE extensions)
 sudo: required
-
 branches:
   except:
     - /^v[0-9]/
-
 addons:
   apt:
-    sources:
-      # Need msgfmt 0.19.8 to be able to generate .desktop files
-      - sourceline: 'ppa:ricotz/toolchain'
     packages:
       - autoconf
       - clang
       - lcov
       - gettext
+      - libcanberra-dev
       - libperl-dev
       - python-dev
       - python3-dev
-      - liblua5.2-dev
-      - lua5.2
+      - liblua5.3-dev
+      - lua5.3
       - ruby-dev
       - tcl-dev
       - cscope
       - libgtk2.0-dev
+      - desktop-file-utils
+      - libtool-bin
+services:
+  - xvfb
 
 before_install:
   - rvm reset
@@ -49,14 +49,17 @@ before_install:
   - "[ -n \"$VIM_SUMMARY\" ] && export TRAVIS_TAG=$(cd vim && git describe --tags --abbrev=0) || true"
 
 before_script:
-  - export DISPLAY=':99.0'
-  - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+  - sudo sysctl -w net.ipv6.conf.lo.disable_ipv6=0
+  - sudo update-alternatives --install /usr/bin/lua lua /usr/bin/lua5.3 10
+  - sudo bash vim/ci/load-snd-dummy.sh || true
+  - sudo usermod -a -G audio $USER
+  - do_test() { sg audio "sg $(id -gn) '$*'"; }
 
 script:
   - scripts/build_vim.sh
   - ${SRCDIR}/vim --version
   - bash -ex scripts/appimage.sh
-  - make -C vim/src/testdir VIMPROG=$TRAVIS_BUILD_DIR/vim.appimage
+  - make -C vim/src/testdir
   # dump failed screen tests
   - scripts/dump_failed_screentests.sh
 
