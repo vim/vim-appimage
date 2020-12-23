@@ -1,16 +1,3 @@
-diff --git a/src/testdir/Makefile b/src/testdir/Makefile
-index 2fb329aa1..70479632d 100644
---- a/src/testdir/Makefile
-+++ b/src/testdir/Makefile
-@@ -12,7 +12,7 @@ SCRIPTSOURCE = ../../runtime
- # Comment out this line to see the verbose output of tests.
- #
- # Catches SwapExists to avoid hanging at the ATTENTION prompt.
--REDIR_TEST_TO_NULL = --cmd 'au SwapExists * let v:swapchoice = "e"' > /dev/null
-+REDIR_TEST_TO_NULL = --cmd 'au SwapExists * let v:swapchoice = "e"'
- 
- # Uncomment this line to use valgrind for memory leaks and extra warnings.
- #   The output goes into a file "valgrind.testN"
 diff --git a/src/testdir/test_options.vim b/src/testdir/test_options.vim
 index 74f8d4c55..59054226f 100644
 --- a/src/testdir/test_options.vim
