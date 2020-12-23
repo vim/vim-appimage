@@ -51,7 +51,7 @@ before_install:
 before_script:
   - sudo sysctl -w net.ipv6.conf.lo.disable_ipv6=0
   - sudo update-alternatives --install /usr/bin/lua lua /usr/bin/lua5.3 10
-  - sudo bash vim/ci/load-snd-dummy.sh || true
+  - sudo bash -x vim/ci/load-snd-dummy.sh || true
   - sudo usermod -a -G audio $USER
   - do_test() { sg audio "sg $(id -gn) '$*'"; }
 
@@ -59,7 +59,8 @@ script:
   - scripts/build_vim.sh
   - ${SRCDIR}/vim --version
   - bash -ex scripts/appimage.sh
-  - make -C vim/src/testdir VIMPROG=$TRAVIS_BUILD_DIR/vim.appimage TEST_FILTER=test_sound
+  - export TEST_FILTER=test_sound
+  - TEST_FILTER=test_sound make -C vim/src/testdir VIMPROG=$TRAVIS_BUILD_DIR/vim.appimage TEST_FILTER=test_sound
   # dump failed screen tests
   - scripts/dump_failed_screentests.sh
 
