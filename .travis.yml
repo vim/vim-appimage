@@ -54,8 +54,6 @@ before_script:
   - sudo bash ci/load-snd-dummy.sh || true
   - sudo usermod -a -G audio $USER
   - do_test() { sg audio "sg $(id -gn) '$*'"; }
-  - export DISPLAY=':99.0'
-  - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
 script:
   - scripts/build_vim.sh
