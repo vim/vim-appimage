@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/vim/vim-appimage.svg?branch=master)](https://travis-ci.org/vim/vim-appimage)
+[![Build Status](https://travis-ci.com/vim/vim-appimage.svg?branch=master)](https://travis-ci.com/vim/vim-appimage)
 
 # Vim AppImage Repository
 
