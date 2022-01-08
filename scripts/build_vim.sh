@@ -11,7 +11,7 @@ SRCDIR=$script_dir/../vim/src
 FEATURES=huge
 
 typeset -a CFG_OPTS
-CFG_OPTS+=( "--enable-gui=gtk2" )
+CFG_OPTS+=( "--enable-gui=gtk3" )
 CFG_OPTS+=( "--enable-perlinterp" )
 CFG_OPTS+=( "--enable-pythoninterp" )
 CFG_OPTS+=( "--enable-python3interp" )

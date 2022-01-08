@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ########################################################################
-# Package the binaries built on Travis-CI as an AppImage
+# Package the binaries built on GitHub Actions as an AppImage
 # By Simon Peter 2016
 # For more information, see http://appimage.org/
 ########################################################################
@@ -16,8 +16,8 @@ AppImageKitVersion=11
 export ARCH="$(arch)"
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 
-if [ -n "$TRAVIS" ]; then
-    echo "Travis detected"
+if [ -n "$GITHUB_ACTIONS" ]; then
+    echo "GitHub Actions detected"
     BUILD_BASE=$HOME
 else
     BUILD_BASE="$script_dir/../build"
@@ -109,16 +109,13 @@ delete_blacklisted
 GLIBC_NEEDED=$(glibc_needed)
 VERSION=$VIM_VER
 
-if [ -n "$TRAVIS" ]; then
+if [ -n "$GITHUB_ACTIONS" ]; then
     # Create release file
-    # Travis cannot handle a multi-line release body,
-    # see https://github.com/travis-ci/dpl/issues/155
-    # so add a single line with <br> for the line breaks
-    dl_counter="![Github Downloads (by Release)](https://img.shields.io/github/downloads/$TRAVIS_REPO_SLUG/$TRAVIS_TAG/total.svg)"
+    dl_counter="![Github Downloads (by Release)](https://img.shields.io/github/downloads/$GITHUB_REPOSITORY/${VIM_VER}/total.svg)"
     version_info="**GVim: $VIM_VER** - Vim git commit: [$GIT_REV](https://github.com/vim/vim/commit/$GIT_REV) - glibc: $GLIBC_NEEDED"
-    travis_build="[Travis Build Logfile]($TRAVIS_BUILD_WEB_URL)"
+    gha_build="[GitHub Actions Logfile]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)"
 
-    echo "$dl_counter<br><br>Version Information:<br>$version_info<br><br>$travis_build" >  "$TRAVIS_BUILD_DIR/release.body"
+    echo "$dl_counter<br><br>Version Information:<br>$version_info<br><br>$gha_build" >  "$GITHUB_WORKSPACE/release.body"
 fi
 
 ########################################################################
@@ -195,13 +192,13 @@ TARGET_NAME="$APP-$VERSION.glibc$GLIBC_NEEDED-$ARCH.AppImage"
 
 ./AppImageAssistant -u "gh-releases-zsync|vim|vim-appimage|latest|GVim-*x86_64.AppImage.zsync" ./$APP.AppDir/ "../out/$TARGET_NAME"
 
-if [ -n "$TRAVIS" ]; then
-    echo "Copy $BUILD_BASE/out/$TARGET_NAME -> $TRAVIS_BUILD_DIR"
-    cp "$BUILD_BASE/out/$TARGET_NAME" "$TRAVIS_BUILD_DIR"
-    cp "$BUILD_BASE/$APP/$TARGET_NAME.zsync" "$TRAVIS_BUILD_DIR"
+if [ -n "$GITHUB_ACTIONS" ]; then
+    echo "Copy $BUILD_BASE/out/$TARGET_NAME -> $GITHUB_WORKSPACE"
+    cp "$BUILD_BASE/out/$TARGET_NAME" "$GITHUB_WORKSPACE"
+    cp "$BUILD_BASE/$APP/$TARGET_NAME.zsync" "$GITHUB_WORKSPACE"
     # use lowercase "appimage" here, so it is not picked up by travis deploy
-    ln -s "$TRAVIS_BUILD_DIR/$TARGET_NAME" "$TRAVIS_BUILD_DIR/vim.appimage"
-    ln -s "$TRAVIS_BUILD_DIR/$TARGET_NAME" "$TRAVIS_BUILD_DIR/gvim.appimage"
+    ln -s "$GITHUB_WORKSPACE/$TARGET_NAME" "$GITHUB_WORKSPACE/vim.appimage"
+    ln -s "$GITHUB_WORKSPACE/$TARGET_NAME" "$GITHUB_WORKSPACE/gvim.appimage"
 
 fi
 
