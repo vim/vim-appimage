@@ -1,0 +1,140 @@
+name: Release AppImage
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  check-updates:
+    runs-on: ubuntu-latest
+
+    outputs:
+      updated: ${{ steps.check-updates.outputs.updated }}
+
+    steps:
+      - name: Get latest tags
+        id: latest-tags
+        uses: octokit/graphql-action@v2.x
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          query: |
+            query latestTags($owner:String!,$repo:String!) {
+              appimage: repository(owner:$owner, name:$repo) {
+                refs(refPrefix:"refs/tags/", last:1) {
+                  edges {
+                    node {
+                      name
+                    }
+                  }
+                }
+              }
+              vim: repository(owner:"vim", name:"vim") {
+                refs(refPrefix:"refs/tags/", last:1) {
+                  edges {
+                    node {
+                      name
+                    }
+                  }
+                }
+              }
+            }
+          owner: ${{ github.event.repository.owner.login }}
+          repo: ${{ github.event.repository.name }}
+
+      - name: Check updates
+        id: check-updates
+        run: |
+          appimage_tag=${{ fromJSON(steps.latest-tags.outputs.data).appimage.refs.edges[0].node.name }}
+          vim_tag=${{ fromJSON(steps.latest-tags.outputs.data).vim.refs.edges[0].node.name }}
+          echo "::set-output name=updated::$([[ ${appimage_tag} != ${vim_tag} ]] && echo true)"
+
+  create-appimage:
+    runs-on: ubuntu-18.04
+
+    needs: check-updates
+
+    if: needs.check-updates.outputs.updated == 'true'
+
+    env:
+      CC: gcc
+      TERM: xterm
+      DISPLAY: ':99'
+      DEBIAN_FRONTEND: noninteractive
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install packages
+        run: |
+          sudo apt update && sudo apt install -y \
+            autoconf \
+            lcov \
+            gettext \
+            libcanberra-dev \
+            libperl-dev \
+            python-dev \
+            python3-dev \
+            liblua5.3-dev \
+            lua5.3 \
+            ruby-dev \
+            tcl-dev \
+            cscope \
+            libgtk-3-dev \
+            desktop-file-utils \
+            libtool-bin \
+            libsodium-dev
+
+      - name: Update Vim
+        run: |
+          git submodule update --init
+          git submodule update --remote
+
+      - name: Set up system
+        run: |
+          sudo sysctl -w net.ipv6.conf.lo.disable_ipv6=0
+          sudo update-alternatives --install /usr/bin/lua lua /usr/bin/lua5.3 10
+          sudo bash vim/ci/setup-xvfb.sh
+
+      - name: Build Vim
+        run: bash scripts/build_vim.sh
+
+      - name: Test Vim
+        timeout-minutes: 20
+        run: |
+          (
+          cd vim
+          ./src/vim --version
+          make test
+          )
+          # dump failed screen tests
+          bash scripts/dump_failed_screentests.sh
+
+      - name: Create AppImage
+        run: bash -ex scripts/appimage.sh
+
+      - name: Commit and push
+        id: commit
+        run: |
+          tag_name=$(git -C vim describe --tags --abbrev=0)
+          echo "::set-output name=tag_name::${tag_name}"
+          vim_summary=$(git submodule summary vim)
+          workflow_url=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
+
+          git config --local user.name "${GITHUB_ACTOR}"
+          git config --local user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git remote set-url origin "https://github-actions:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}"
+          git commit -m "Vim: ${tag_name}" -m "${vim_summary}" -m "${workflow_url}" vim
+          git tag -f "${tag_name}" -m "Vim: ${tag_name}"
+          git push --follow-tags -u origin "${GITHUB_REF_NAME}"
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: release.body
+          name: 'Vim: ${{ steps.commit.outputs.tag_name }}'
+          tag_name: ${{ steps.commit.outputs.tag_name }}
+          files: |
+            *.AppImage
+            *.zsync
