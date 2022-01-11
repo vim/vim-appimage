@@ -13,6 +13,10 @@ jobs:
       updated: ${{ steps.check-updates.outputs.updated }}
 
     steps:
+      - name: Set up param
+        id: param
+        run: awk -F/ '{print"::set-output name=owner::"$1"\n::set-output name=repo::"$2}' <<< "${{ github.repository }}"
+
       - name: Get latest tags
         id: latest-tags
         uses: octokit/graphql-action@v2.x
@@ -20,7 +24,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           query: |
-            query latestTags($owner:String!,$repo:String!) {
+            query($owner:String!,$repo:String!) {
               appimage: repository(owner:$owner, name:$repo) {
                 refs(refPrefix:"refs/tags/", last:1) {
                   edges {
@@ -40,8 +44,8 @@ jobs:
                 }
               }
             }
-          owner: ${{ github.event.repository.owner.login }}
-          repo: ${{ github.event.repository.name }}
+          owner: ${{ steps.param.outputs.owner }}
+          repo: ${{ steps.param.outputs.repo }}
 
       - name: Check updates
         id: check-updates
@@ -122,8 +126,8 @@ jobs:
           vim_summary=$(git submodule summary vim)
           workflow_url=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
 
-          git config --local user.name "${GITHUB_ACTOR}"
-          git config --local user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin "https://github-actions:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}"
           git commit -m "Vim: ${tag_name}" -m "${vim_summary}" -m "${workflow_url}" vim
           git tag -f "${tag_name}" -m "Vim: ${tag_name}"
