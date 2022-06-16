@@ -84,8 +84,8 @@ move_lib
 # Delete stuff that should not go into the AppImage
 ########################################################################
 
-# if those libraries are present, there will be a pango problem
-find . -name "libpango*" -delete
+# include libpango, to avoid undefined symbol g_memdup2 on Ubuntu 22.04
+#find . -name "libpango*" -delete
 find . -name "libfreetype*" -delete
 find . -name "libX*" -delete
 
