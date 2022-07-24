@@ -4,7 +4,7 @@ if [ -z "$VIM" ]; then
     export VIM=$APPDIR/usr/share/vim
 fi
 if [ -z "$VIMRUNTIME" ]; then
-    export VIMRUNTIME=$APPDIR/usr/share/vim/vim82
+    export VIMRUNTIME=$APPDIR/usr/share/vim/vim90
 fi
 
 # We don't pack Python stuff, so unset the PYTHON vars set by AppRun.
