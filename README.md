@@ -19,7 +19,7 @@ ln -s GVim-v8.2.2965.glibc2.15-x86_64.AppImage vim.appimage
 
 Then start `vim.appimage` to get a terminal Vim.
 
-If you need a dynamic interface to Perl, Python2, Python3, Ruby or Lua make
+If you need a dynamic interface to Perl, Python2, Python3.8, Ruby or Lua make
 sure your system provides the needed dynamic libraries (e.g. libperlX,
 libpython2.7 libpython3X liblua5X and librubyX) as those are **not**
 distributed together with the image to not make the image too large.
