@@ -116,8 +116,11 @@ jobs:
           # dump failed screen tests
           bash scripts/dump_failed_screentests.sh
 
-      - name: Create AppImage
-        run: bash -ex scripts/appimage.sh
+      - name: Create GVim AppImage
+        run: bash -ex scripts/appimage.sh GVim
+
+      - name: Create Vim AppImage
+        run: bash -ex scripts/appimage.sh Vim
 
       - name: Commit and push
         id: commit
