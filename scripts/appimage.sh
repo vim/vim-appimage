@@ -8,7 +8,11 @@
 
 set -e
 
-APP=GVim
+if [ -z "$1" ]; then
+  APP=GVim
+else
+  APP=$1
+fi
 LOWERAPP=${APP,,}
 
 ARCH=$(arch)
@@ -31,7 +35,8 @@ fi
 #    exit
 #fi
 
-cd vim
+# uses the shadowdir from build_vim.sh
+cd vim/src/$LOWERAPP
 
 GIT_REV="$(git rev-parse --short HEAD)"
 
@@ -131,12 +136,18 @@ find ./usr/bin -type l \! -name "gvim" -delete || true
 
 # Remove duplicate keys from desktop file. This might occure while localisation
 # for the desktop file is progressing.
-mv gvim.desktop gvim.desktop.orig
-awk '{x=$0; sub(/=.*$/, "", x);if(!seen[x]++){print $0}}' gvim.desktop.orig > gvim.desktop
-rm gvim.desktop.orig
+mv ${LOWERAPP}.desktop ${LOWERAPP}.desktop.orig
+awk '{x=$0; sub(/=.*$/, "", x);if(!seen[x]++){print $0}}' ${LOWERAPP}.desktop.orig > ${LOWERAPP}.desktop
+rm ${LOWERAPP}.desktop.orig
+
+if [[ "$LOWERAPP" == "vim" ]]; then
+  # This confuses generate_type2_appimage, so get rid of it for Vim
+  rm gvim.desktop
+  sed -i "s/^Icon=gvim/Icon=vim/" ${LOWERAPP}.desktop
+fi
 
 # change Exec line to script
-sed -i 's/^Exec=gvim.*$/Exec=vim.start.sh %F/' gvim.desktop
+sed -i "s/^Exec=${LOWERAPP}.*$/Exec=vim.start.sh %F/" ${LOWERAPP}.desktop
 
 # copy script
 cp "$script_dir/vim.start.sh"  ./usr/bin
