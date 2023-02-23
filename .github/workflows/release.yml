@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Set up param
         id: param
-        run: awk -F/ '{print"::set-output name=owner::"$1"\n::set-output name=repo::"$2}' <<< "${{ github.repository }}"
+        run: awk -F/ '{print"name=owner="$1"\nrepo="$2}' <<< "${{ github.repository }}" >> "$GITHUB_OUTPUT"
 
       - name: Get latest tags
         id: latest-tags
@@ -123,7 +123,7 @@ jobs:
         id: commit
         run: |
           tag_name=$(git -C vim describe --tags --abbrev=0)
-          echo "::set-output name=tag_name::${tag_name}"
+          echo "tag_name=${tag_name}" >> "$GITHUB_OUTPUT"
           vim_summary=$(git submodule summary vim)
           workflow_url=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
 
