@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Set up param
         id: param
-        run: awk -F/ '{print"name=owner="$1"\nrepo="$2}' <<< "${{ github.repository }}" >> "$GITHUB_OUTPUT"
+        run: awk -F/ '{print"owner="$1"\nrepo="$2}' <<< "${{ github.repository }}" >> "$GITHUB_OUTPUT"
 
       - name: Get latest tags
         id: latest-tags
