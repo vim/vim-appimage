@@ -52,7 +52,7 @@ jobs:
         run: |
           appimage_tag=${{ fromJSON(steps.latest-tags.outputs.data).appimage.refs.edges[0].node.name }}
           vim_tag=${{ fromJSON(steps.latest-tags.outputs.data).vim.refs.edges[0].node.name }}
-          echo "::set-output name=updated::$([[ ${appimage_tag} != ${vim_tag} ]] && echo true)"
+          echo "updated=$([[ ${appimage_tag} != ${vim_tag} ]] && echo true)" >> "$GITHUB_OUTPUT"
 
   create-appimage:
     runs-on: ubuntu-18.04
