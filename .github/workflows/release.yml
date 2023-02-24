@@ -105,12 +105,16 @@ jobs:
       - name: Build Vim
         run: bash scripts/build_vim.sh
 
+      - name: Vim Version
+        run: |
+          vim/src/vim/vim --version
+          vim/src/gvim/vim --version
+
       - name: Test Vim
         timeout-minutes: 20
         run: |
           (
-          cd vim
-          ./src/vim --version
+          cd vim/src/gvim
           make test
           )
           # dump failed screen tests
