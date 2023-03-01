@@ -7,6 +7,8 @@ if [ -z "$VIMRUNTIME" ]; then
     export VIMRUNTIME=$APPDIR/usr/share/vim/vim90
 fi
 
+export GIO_MODULE_DIR=$APPDIR/usr/lib/x86_64-linux-gnu/gio/modules
+
 # We don't pack Python stuff, so unset the PYTHON vars set by AppRun.
 # see https://github.com/AppImage/AppImageKit/blob/master/src/AppRun.c
 unset PYTHONPATH
