@@ -99,19 +99,6 @@ find . -name "libX*" -delete
 delete_blacklisted
 
 ########################################################################
-# Determine the version of the app; also include needed glibc version
-########################################################################
-
-if [ -n "$GITHUB_ACTIONS" ]; then
-    # Create release file
-    dl_counter="![Github Downloads (by Release)](https://img.shields.io/github/downloads/$GITHUB_REPOSITORY/${VERSION}/total.svg)"
-    version_info="**GVim: $VERSION** - Vim git commit: [$GIT_REV](https://github.com/vim/vim/commit/$GIT_REV) - glibc: $(glibc_needed)"
-    gha_build="[GitHub Actions Logfile]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)"
-
-    echo "$dl_counter<br><br>Version Information:<br>$version_info<br><br>$gha_build" >  "$GITHUB_WORKSPACE/release.body"
-fi
-
-########################################################################
 # Patch away absolute paths; it would be nice if they were relative
 ########################################################################
 
@@ -167,6 +154,16 @@ if [ -n "$GITHUB_ACTIONS" ]; then
     echo "Copy $BUILD_BASE/out/$TARGET_NAME -> $GITHUB_WORKSPACE"
     cp "$BUILD_BASE/out/$TARGET_NAME" "$GITHUB_WORKSPACE"
     cp "$BUILD_BASE/out/$TARGET_NAME.zsync" "$GITHUB_WORKSPACE"
+fi
+
+########################################################################
+# Create Github Release
+########################################################################
+
+if [ -n "$GITHUB_ACTIONS" ]; then
+  pushd "$script_dir"
+  . release_notes.sh > "$GITHUB_WORKSPACE/release.body"
+  popd
 fi
 
 ########################################################################

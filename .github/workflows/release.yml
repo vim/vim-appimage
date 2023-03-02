@@ -6,11 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  check-updates:
+  check-updates-job:
     runs-on: ubuntu-latest
 
     outputs:
       updated: ${{ steps.check-updates.outputs.updated }}
+      appimagetag: ${{ steps.check-updates.outputs.appimagetag }}
 
     steps:
       - name: Set up param
@@ -52,20 +53,22 @@ jobs:
         run: |
           appimage_tag=${{ fromJSON(steps.latest-tags.outputs.data).appimage.refs.edges[0].node.name }}
           vim_tag=${{ fromJSON(steps.latest-tags.outputs.data).vim.refs.edges[0].node.name }}
+          echo "appimagetag=${appimage_tag}" >> "$GITHUB_OUTPUT"
           echo "updated=$([[ ${appimage_tag} != ${vim_tag} ]] && echo true)" >> "$GITHUB_OUTPUT"
 
-  create-appimage:
+  create-appimage-job:
     runs-on: ubuntu-18.04
 
-    needs: check-updates
+    needs: check-updates-job
 
-    if: needs.check-updates.outputs.updated == 'true'
+    if: needs.check-updates-job.outputs.updated == 'true'
 
     env:
       CC: gcc
       TERM: xterm
       DISPLAY: ':99'
       DEBIAN_FRONTEND: noninteractive
+      VIM_REF: ${{ needs.check-updates-job.outputs.appimagetag }}
 
     steps:
       - uses: actions/checkout@v3
@@ -121,10 +124,10 @@ jobs:
           bash scripts/dump_failed_screentests.sh
 
       - name: Create GVim AppImage
-        run: bash -ex scripts/appimage.sh GVim
+        run: bash -e scripts/appimage.sh GVim
 
       - name: Create Vim AppImage
-        run: bash -ex scripts/appimage.sh Vim
+        run: bash -e scripts/appimage.sh Vim
 
       - name: Commit and push
         id: commit
