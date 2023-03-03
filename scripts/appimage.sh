@@ -79,6 +79,11 @@ find "${SOURCE_DIR}" -xdev -name "vim48x48.png" -exec cp {} "${LOWERAPP}.png" \;
 
 mkdir -p ./usr/lib/x86_64-linux-gnu
 
+if [[ "$LOWERAPP" == "gvim" ]]; then
+  # package the gio plugins for the GUI
+  cp -a /usr/lib/x86_64-linux-gnu/gio ./usr/lib/x86_64-linux-gnu/
+fi
+
 # copy dependencies
 copy_deps
 
