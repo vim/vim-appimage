@@ -7,8 +7,8 @@ gha_build="[GitHub Actions Logfile]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/action
 
 vimlog_md=$(git -C ../vim log --pretty='format:%H %s' $VIM_REF..$GIT_REV | sed \
     -e 's/[][_*^<`\\]/\\&/g' \
-    -e "s#^\([0-9a-f]*\) patch \([0-9.a-z]*\)#* [\2]($commiturl\1)#" \
-    -e "s#^\([0-9a-f]*\) \(.*\)#* [\2]($commiturl\1)#")
+    -e "s#^\([0-9a-f]*\) patch \([0-9.a-z]*\)#* [\2]($vimcommiturl\1)#" \
+    -e "s#^\([0-9a-f]*\) \(.*\)#* [\2]($vimcommiturl\1)#")
 
 if [ -z "$vimlog_md" ]; then
   vimlog_md="_No changes unfortunately_ :worried:"
