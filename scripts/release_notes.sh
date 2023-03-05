@@ -32,25 +32,27 @@ $vimlog_md
 The difference between the GVim and Vim Appimage is, that the GVim version includes a graphical User Interface (GTK3) and other X11 features like clipboard handling. That means, for proper clipboard support, you'll **need** the GVim Appimage, but you can only run this on a system that has the X11 libraries installed. <p/>
 
 For a Server or headless environment, you are probably be better with the Vim version.<p/> _Note_: The image is based on Ubuntu 18.04 LTS bionic. It most likely won't work on older distributions.
-EOF
 
-cat <<'EOF'
 ### Run it
 Download the AppImage, make it executable then you can just run it:
-```bash
-wget -O /tmp/gvim.appimage https://github.com/vim/vim-appimage/releases/download/[...]/GVim-[...]_64.AppImage
+\`\`\`bash
+wget -O /tmp/gvim.appimage https://github.com/${GITHUB_REPOSITORY}/releases/download/${VERSION}/GVim-${VERSION}.glibc${GLIBC_NEEDED}-x86_64.AppImage
 chmod +x /tmp/gvim.appimage
 /tmp/gvim.appimage
-```
+# alternatively, download the Vim Appimage
+wget -O /tmp/vim.appimage https://github.com/${GITHUB_REPOSITORY}/releases/download/${VERSION}/Vim-${VERSION}.glibc${GLIBC_NEEDED}-x86_64.AppImage
+chmod +x /tmp/vim.appimage
+/tmp/vim.appimage
+\`\`\`
 
 That's all, you should have a graphical vim now running (if you have a graphical system running) :smile: 
 
 If you want a terminal Vim (with X11 and clipboard feature enabled), just create a symbolic link with a name starting with "vim". Like:
-```bash
+\`\`\`bash
 ln -s /tmp/gvim.appimage /tmp/vim.appimage
-```
+\`\`\`
 
-Then execute `vim.appimage` to get a terminal Vim.
+Then execute \`vim.appimage\` to get a terminal Vim.
 
 ### More Information
 If you need a dynamic interface to Perl, Python2, Python3.8, Ruby or Lua make sure your system provides the needed dynamic libraries (e.g. libperlX, libpython2.7 libpython3X liblua5X and librubyX) as those are **not** distributed together with the image to not make the image too large.
