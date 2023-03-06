@@ -31,7 +31,7 @@ $vimlog_md
 ### What is the Difference between the GVim and the Vim Appimage?
 The difference between the GVim and Vim Appimage is, that the GVim version includes a graphical User Interface (GTK3) and other X11 features like clipboard handling. That means, for proper clipboard support, you'll **need** the GVim Appimage, but you can only run this on a system that has the X11 libraries installed. <p/>
 
-For a Server or headless environment, you are probably be better with the Vim version.<p/> _Note_: The image is based on Ubuntu 18.04 LTS bionic. It most likely won't work on older distributions.
+For a Server or headless environment, you are probably be better with the Vim version.<p/> _Note_: The image is based on Ubuntu 20.04 LTS focal. It most likely won't work on older distributions.
 
 ### Run it
 Download the AppImage, make it executable then you can just run it:
