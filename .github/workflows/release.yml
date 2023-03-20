@@ -57,7 +57,7 @@ jobs:
           echo "updated=$([[ ${appimage_tag} != ${vim_tag} ]] && echo true)" >> "$GITHUB_OUTPUT"
 
   create-appimage-job:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
 
     needs: check-updates-job
 
@@ -102,7 +102,6 @@ jobs:
       - name: Set up system
         run: |
           sudo sysctl -w net.ipv6.conf.lo.disable_ipv6=0
-          sudo update-alternatives --install /usr/bin/lua lua /usr/bin/lua5.3 10
           sudo bash vim/ci/setup-xvfb.sh
 
       - name: Build Vim

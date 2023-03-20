@@ -7,7 +7,12 @@ AppImage is a form of cross-distribution packaging format that can be run
 everywhere by simply downloading the image and starting it. For more
 information about the package format see here: [AppImage](https://appimage.org).
 
-The image is based on Ubuntu 18.04 LTS bionic. It most likely won't work on older distributions.
+The image is based on Ubuntu ~~18.04 LTS bionic~~ 20.04 LTS bionic (since PR #47,
+because Github retired the Ubuntu 18.04 images in April 2023)
+
+It most likely won't work on older distributions. If you require a Vim appimage,
+that runs on older distributions, you can download the latest Ubuntu 18.04 based
+installation [here: v9.0.1413](https://github.com/vim/vim-appimage/releases/tag/v9.0.1413)
 
 [Download](https://github.com/vim/vim-appimage/releases) and execute the
 most recent `GVim-8.2.X_*.AppImage` file to run GVim.
