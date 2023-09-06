@@ -58,7 +58,7 @@ else
 fi
 
 GIT_REV="$(git rev-parse --short HEAD)"
-VERSION="$(git describe --tags --abbrev=0)"
+VERSION="$(git describe --tags --abbrev=0 --always)"
 SOURCE_DIR="$(git rev-parse --show-toplevel)"
 ARCH=$(arch)
 LOWERAPP=${APP,,}
