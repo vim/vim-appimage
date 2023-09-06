@@ -2,7 +2,7 @@
 set -e
 vimcommiturl="https://github.com/vim/vim/commit/"
 dl_counter="![Github Downloads (by Release)](https://img.shields.io/github/downloads/$GITHUB_REPOSITORY/${VERSION}/total.svg)"
-version_info="**GVim: $VERSION** - Vim git commit: [$GIT_REV](${vimcommiturl}${GIT_REV}) - glibc: ${GLIBC_NEEDED}"
+version_info="**GVim: $VERSION** - Vim git commit: [$GIT_REV](${vimcommiturl}${GIT_REV}) - glibc: ${GLIBC}"
 gha_build="[GitHub Actions Logfile]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)"
 
 vimlog_md=$(git -C ../vim log --pretty='format:%H %s' $VIM_REF..$GIT_REV | sed \
@@ -21,8 +21,8 @@ $dl_counter<br><br>Version Information:<br>$version_info<br><br>$gha_build
 
 ### Downloads
 This release provides the following Artifacts:
-* [![GVim-${VERSION}.Appimage](https://img.shields.io/github/downloads/${GITHUB_REPOSITORY}/${VERSION}/GVim-${VERSION}.glibc${GLIBC_NEEDED}-x86_64.AppImage.svg?label=downloads&logo=vim)](https://github.com/${GITHUB_REPOSITORY}/releases/download/${VERSION}/GVim-${VERSION}.glibc${GLIBC_NEEDED}-x86_64.AppImage)
-* [![Vim-${VERSION}.Appimage](https://img.shields.io/github/downloads/${GITHUB_REPOSITORY}/${VERSION}/Vim-${VERSION}.glibc${GLIBC_NEEDED}-x86_64.AppImage.svg?label=downloads&logo=vim)](https://github.com/${GITHUB_REPOSITORY}/releases/download/${VERSION}/Vim-${VERSION}.glibc${GLIBC_NEEDED}-x86_64.AppImage)
+* [![GVim-${VERSION}.Appimage](https://img.shields.io/github/downloads/${GITHUB_REPOSITORY}/${VERSION}/GVim-${VERSION}.glibc${GLIBC}-x86_64.AppImage.svg?label=downloads&logo=vim)](https://github.com/${GITHUB_REPOSITORY}/releases/download/${VERSION}/GVim-${VERSION}.glibc${GLIBC}-x86_64.AppImage)
+* [![Vim-${VERSION}.Appimage](https://img.shields.io/github/downloads/${GITHUB_REPOSITORY}/${VERSION}/Vim-${VERSION}.glibc${GLIBC}-x86_64.AppImage.svg?label=downloads&logo=vim)](https://github.com/${GITHUB_REPOSITORY}/releases/download/${VERSION}/Vim-${VERSION}.glibc${GLIBC}-x86_64.AppImage)
 <p/>
 
 ### Changelog
@@ -36,11 +36,11 @@ For a Server or headless environment, you are probably be better with the Vim ve
 ### Run it
 Download the AppImage, make it executable then you can just run it:
 \`\`\`bash
-wget -O /tmp/gvim.appimage https://github.com/${GITHUB_REPOSITORY}/releases/download/${VERSION}/GVim-${VERSION}.glibc${GLIBC_NEEDED}-x86_64.AppImage
+wget -O /tmp/gvim.appimage https://github.com/${GITHUB_REPOSITORY}/releases/download/${VERSION}/GVim-${VERSION}.glibc${GLIBC}-x86_64.AppImage
 chmod +x /tmp/gvim.appimage
 /tmp/gvim.appimage
 # alternatively, download the Vim Appimage
-wget -O /tmp/vim.appimage https://github.com/${GITHUB_REPOSITORY}/releases/download/${VERSION}/Vim-${VERSION}.glibc${GLIBC_NEEDED}-x86_64.AppImage
+wget -O /tmp/vim.appimage https://github.com/${GITHUB_REPOSITORY}/releases/download/${VERSION}/Vim-${VERSION}.glibc${GLIBC}-x86_64.AppImage
 chmod +x /tmp/vim.appimage
 /tmp/vim.appimage
 \`\`\`

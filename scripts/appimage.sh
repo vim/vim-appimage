@@ -6,7 +6,7 @@ patch_desktop_files()
 {
 	# Remove duplicate keys from desktop file. This might occure while localisation
 	# for the desktop file is progressing.
-	pushd "${SOURCE_DIR}/vim/runtime"
+	pushd "${SOURCE_DIR}/runtime"
 	mv ${LOWERAPP}.desktop ${LOWERAPP}.desktop.orig
 	awk '{x=$0; sub(/=.*$/, "", x);if(!seen[x]++){print $0}}' ${LOWERAPP}.desktop.orig > ${LOWERAPP}.desktop
 	rm ${LOWERAPP}.desktop.orig
@@ -27,11 +27,11 @@ make_appimage()
 		&& chmod +x linuxdeploy.appimage )
 
 	export UPDATE_INFORMATION="gh-releases-zsync|vim|vim-appimage|latest|$APP-*x86_64.AppImage.zsync"
-	export OUTPUT="${APP}-${VERSION}.glibc${glibc}-${ARCH}.AppImage"
+	export OUTPUT="${APP}-${VERSION}.glibc${GLIBC}-${ARCH}.AppImage"
 
 	./linuxdeploy.appimage --appdir "$APP.AppDir" \
-		-d "${SOURCE_DIR}/vim/runtime/${LOWERAPP}.desktop" \
-		-i "${SOURCE_DIR}/vim/runtime/${LOWERAPP}.png" \
+		-d "${SOURCE_DIR}/runtime/${LOWERAPP}.desktop" \
+		-i "${SOURCE_DIR}/runtime/${LOWERAPP}.png" \
 		--output appimage
 
 	if [ -n "$GITHUB_ACTIONS" ]; then
@@ -57,11 +57,15 @@ else
     mkdir -p "$BUILD_BASE"
 fi
 
+pushd vim
 GIT_REV="$(git rev-parse --short HEAD)"
-VERSION="$(git describe --tags --abbrev=0 --always)"
+# should use tag if available, else use 7-hexdigit hash
+VERSION="$(git describe --tags --abbrev=0 || git describe --always)"
+# SOURCE_DIR: /home/<user>/vim-appimage/vim
 SOURCE_DIR="$(git rev-parse --show-toplevel)"
 ARCH=$(arch)
 LOWERAPP=${APP,,}
+popd
 
 # uses the shadowdir from build_vim.sh
 cd vim/src/$LOWERAPP
