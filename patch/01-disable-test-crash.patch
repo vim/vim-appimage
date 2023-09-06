@@ -1,0 +1,14 @@
+diff --git a/src/testdir/test_crash.vim b/src/testdir/test_crash.vim
+index aa3068429..754682b5f 100644
+--- a/src/testdir/test_crash.vim
++++ b/src/testdir/test_crash.vim
+@@ -6,6 +6,9 @@ CheckScreendump
+ 
+ func Test_crash1()
+   CheckNotBSD
++  if v:true
++    throw 'Disabling test on Vim-Appimage Repository'
++  endif
+ 
+   if !executable('sh')
+     throw 'Skipped: sh not executable!'

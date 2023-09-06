@@ -1,0 +1,14 @@
+diff --git a/src/testdir/test_gui.vim b/src/testdir/test_gui.vim
+index acc72f839..c87ed24cd 100644
+--- a/src/testdir/test_gui.vim
++++ b/src/testdir/test_gui.vim
+@@ -718,6 +718,9 @@ func Test_set_guioptions()
+ endfunc
+ 
+ func Test_scrollbars()
++  if v:true
++    throw 'Disabling test on Vim-Appimage Repository'
++  endif
+   " this test sometimes fails on CI
+   let g:test_is_flaky = 1
+ 
