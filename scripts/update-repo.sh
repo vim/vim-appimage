@@ -9,7 +9,7 @@ else
 fi
 
 cd $workdir
-if [ ! -f .travis.yml ]; then
+if [ ! -d .github ]; then
     echo "Wrong directory."
     exit 1
 fi
