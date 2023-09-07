@@ -33,12 +33,21 @@ make_appimage()
 		-d "${SOURCE_DIR}/runtime/${LOWERAPP}.desktop" \
 		-i "${SOURCE_DIR}/runtime/${LOWERAPP}.png" \
 		--output appimage
+}
 
+github_actions_deploy()
+{
 	if [ -n "$GITHUB_ACTIONS" ]; then
-			TARGET_NAME=$(find "$BUILD_BASE/" -type f -name "$APP-*.AppImage" -printf '%f\n')
-			echo "Copy $BUILD_BASE/$TARGET_NAME -> $GITHUB_WORKSPACE"
-			cp "$BUILD_BASE/$TARGET_NAME" "$GITHUB_WORKSPACE"
-			cp "$BUILD_BASE/$TARGET_NAME.zsync" "$GITHUB_WORKSPACE"
+		# Copy artifacts to $GITHUB_WORKSPACE
+		TARGET_NAME=$(find "$BUILD_BASE/" -type f -name "$APP-*.AppImage" -printf '%f\n')
+		echo "Copy $BUILD_BASE/$TARGET_NAME -> $GITHUB_WORKSPACE"
+		cp "$BUILD_BASE/$TARGET_NAME" "$GITHUB_WORKSPACE"
+		cp "$BUILD_BASE/$TARGET_NAME.zsync" "$GITHUB_WORKSPACE"
+
+		# Github Release Notes
+		pushd "$script_dir"
+		. release_notes.sh > "$GITHUB_WORKSPACE/release.body"
+		popd
 	fi
 }
 
@@ -49,6 +58,7 @@ else
 fi
 
 script_dir="$(cd "$(dirname "$0")" && pwd)"
+
 if [ -n "$GITHUB_ACTIONS" ]; then
     echo "GitHub Actions detected"
     BUILD_BASE=$HOME
@@ -68,7 +78,8 @@ LOWERAPP=${APP,,}
 popd
 
 # uses the shadowdir from build_vim.sh
-cd vim/src/$LOWERAPP
+pushd vim/src/$LOWERAPP
+
 GLIBC=$(find ${SOURCE_DIR} -type f -executable -exec strings {} \; | grep "^GLIBC_2" | sed s/GLIBC_//g | sort --version-sort | uniq | tail -n 1)
 # Prepare some source files
 patch_desktop_files
@@ -78,9 +89,7 @@ make install DESTDIR="${BUILD_BASE}/${APP}.AppDir" >/dev/null
 # Create Appimage
 make_appimage
 
-# Create Github Release
-if [ -n "$GITHUB_ACTIONS" ]; then
-  pushd "$script_dir"
-  . release_notes.sh > "$GITHUB_WORKSPACE/release.body"
-  popd
-fi
+# Perform Github Deployment
+github_actions_deploy
+
+popd
