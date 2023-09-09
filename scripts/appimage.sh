@@ -26,6 +26,16 @@ make_appimage()
 			-O linuxdeploy.appimage \
 		&& chmod +x linuxdeploy.appimage )
 
+	pushd ${APP}.AppDir
+	cat <<'EOF' > AppRun
+#!/bin/bash
+HERE="$(dirname "$(readlink -f "${0}")")"
+unset ARGV0
+export VIMRUNTIME=${HERE}/usr/share/vim/vim90
+exec "${HERE}/usr/bin/vim" "${@+"$@"}"
+EOF
+	popd
+
 	export UPDATE_INFORMATION="gh-releases-zsync|vim|vim-appimage|latest|$APP-*x86_64.AppImage.zsync"
 	export OUTPUT="${APP}-${VERSION}.glibc${GLIBC}-${ARCH}.AppImage"
 
