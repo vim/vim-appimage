@@ -32,6 +32,7 @@ make_appimage()
 HERE="$(dirname "$(readlink -f "${0}")")"
 unset ARGV0
 export VIMRUNTIME=${HERE}/usr/share/vim/vim90
+test -L "${HERE}/usr/bin/gvim" && exec "${HERE}/usr/bin/gvim" "${@+"$@"}"
 exec "${HERE}/usr/bin/vim" "${@+"$@"}"
 EOF
 	popd
