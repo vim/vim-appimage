@@ -26,6 +26,12 @@ make_appimage()
 			-O linuxdeploy.appimage \
 		&& chmod +x linuxdeploy.appimage )
 
+	if [[ "$APP" == "GVim" ]]; then
+		wget -c "https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-gtk/master/linuxdeploy-plugin-gtk.sh"
+		chmod +x linuxdeploy-plugin-gtk.sh
+		PLUGIN="--plugin gtk"
+	fi
+
 	pushd ${APP}.AppDir
 	cat <<'EOF' > AppRun
 #!/bin/bash
@@ -43,6 +49,7 @@ EOF
 	./linuxdeploy.appimage --appdir "$APP.AppDir" \
 		-d "${SOURCE_DIR}/runtime/${LOWERAPP}.desktop" \
 		-i "${SOURCE_DIR}/runtime/${LOWERAPP}.png" \
+		${PLUGIN:-} \
 		--output appimage
 }
 
