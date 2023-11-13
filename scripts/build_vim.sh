@@ -14,7 +14,7 @@ export CFLAGS="-Wno-deprecated-declarations"
 typeset -a CFG_OPTS
 CFG_OPTS+=( "--enable-perlinterp" )
 CFG_OPTS+=( "--enable-pythoninterp" )
-CFG_OPTS+=( "--enable-python3interp" )
+CFG_OPTS+=( "--with-python3-stable-abi" )
 CFG_OPTS+=( "--enable-rubyinterp" )
 CFG_OPTS+=( "--enable-luainterp" )
 CFG_OPTS+=( "--enable-tclinterp" )
