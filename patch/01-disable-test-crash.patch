@@ -1,10 +1,21 @@
 diff --git a/src/testdir/test_crash.vim b/src/testdir/test_crash.vim
-index a1da68ed4..8ce667fe5 100644
+index b093b053c..1f3bc2f9f 100644
 --- a/src/testdir/test_crash.vim
 +++ b/src/testdir/test_crash.vim
 @@ -10,6 +10,10 @@ func Test_crash1()
    " Test 7 fails on Mac ...
    CheckNotMac
+ 
++  if v:true
++    throw 'Skipped: Disabling test on Vim-Appimage Repository'
++  endif
++
+   " The following used to crash Vim
+   let opts = #{cmd: 'sh'}
+   let vim  = GetVimProg()
+@@ -114,6 +118,10 @@ func Test_crash1_2()
+   CheckNotBSD
+   CheckExecutable dash
  
 +  if v:true
 +    throw 'Skipped: Disabling test on Vim-Appimage Repository'

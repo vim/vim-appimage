@@ -1,8 +1,8 @@
 diff --git a/src/testdir/test_gui.vim b/src/testdir/test_gui.vim
-index acc72f839..c87ed24cd 100644
+index e7f7c6d83..addb2ef04 100644
 --- a/src/testdir/test_gui.vim
 +++ b/src/testdir/test_gui.vim
-@@ -718,6 +718,9 @@ func Test_set_guioptions()
+@@ -768,6 +768,9 @@ func Test_set_guioptions()
  endfunc
  
  func Test_scrollbars()
