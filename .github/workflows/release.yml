@@ -144,7 +144,7 @@ jobs:
           git push --follow-tags -u origin "${GITHUB_REF_NAME}"
 
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           body_path: release.body
           name: 'Vim: ${{ steps.commit.outputs.tag_name }}'
