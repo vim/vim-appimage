@@ -34,12 +34,19 @@ make_appimage()
 
 	pushd ${APP}.AppDir
 	cat <<'EOF' > AppRun
-#!/bin/bash
-HERE="$(dirname "$(readlink -f "${0}")")"
+#!/bin/sh
+set -ue
+: "${ARGV0:=$0}"  # run without AppImage too
+this_dir=$(readlink -f "$0")
+this_dir=${this_dir%/*}  # empty for '/'
+VIMRUNTIME=${this_dir}/usr/share/vim/vim91; export VIMRUNTIME
+test -x "${this_dir}/usr/bin/gvim" || ARGV0=/vim
+case "${ARGV0##*/}" in
+  (vim*) set -- "${this_dir}/usr/bin/vim"  "$@" ;;
+  (*)    set -- "${this_dir}/usr/bin/gvim" "$@" ;;
+esac
 unset ARGV0
-export VIMRUNTIME=${HERE}/usr/share/vim/vim91
-test -L "${HERE}/usr/bin/gvim" && exec "${HERE}/usr/bin/gvim" "${@+"$@"}"
-exec "${HERE}/usr/bin/vim" "${@+"$@"}"
+exec "$@"
 EOF
 	popd
 
