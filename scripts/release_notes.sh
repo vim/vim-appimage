@@ -54,8 +54,11 @@ ln -s /tmp/gvim.appimage /tmp/vim.appimage
 
 Then execute \`vim.appimage\` to get a terminal Vim.
 
-### More Information
-If you need a dynamic interface to Perl, Python2, Python3.8, Ruby or Lua make sure your system provides the needed dynamic libraries (e.g. libperlX, libpython2.7 libpython3X liblua5X and librubyX) as those are **not** distributed together with the image to not make the image too large.
+### Interpreter interfaces
 
-However, Vim will work without those libraries, but some plugins might need those additional dependencies. This means, those interpreters have to be installed in addition to Vim. Without it Vim won't be able to use those dynamic interfaces.
+The Vim / GVim AppImage's are compiled with Vim interfaces for Perl 5.30, Python 3.8+, Ruby 2.7, and Lua 5.3 and built on Ubuntu 20.04 ("focal"). If your system runs this exact version of Ubuntu (or some compatible flavor), and has the corresponding interpreter packages installed, they will work just as in a native Vim distro package.
+
+Otherwise,
+* for Python 3: install it on your system. In Vim, \`set pythonthreedll=libpython3.10.so\` or similar (use the shell command \`sudo ldconfig -p | grep libpython3\` to find the library name). See \`:help +python3/dyn-stable\`.
+* for any interpreter other than Python: the appimage embeds a version of its runtime. The Vim interface will work (see e.g. \`:help lua\`, \`:help perl\`, \`:help ruby\`), however it won't have access to the default / base modules (with various effects for each interpreter). Any interpreter modules (base and add-ons) installed on your system will be ignored and are most likely not compatible with the runtime version embedded in the AppImage.
 EOF

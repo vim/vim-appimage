@@ -15,22 +15,16 @@ that runs on older distributions, you can download the latest Ubuntu 18.04 based
 installation [here: v9.0.1413](https://github.com/vim/vim-appimage/releases/tag/v9.0.1413)
 
 [Download](https://github.com/vim/vim-appimage/releases) and execute the
-most recent `GVim-8.2.X_*.AppImage` file to run GVim.
+most recent `GVim-*.AppImage` file to run GVim.
 
 If you want a terminal Vim, just create a symbolic link with a name starting with "vim". Like:
 ```
-ln -s GVim-v8.2.2965.glibc2.15-x86_64.AppImage vim.appimage
+ln -s GVim-*.AppImage vim.appimage
 ```
 
 Then start `vim.appimage` to get a terminal Vim.
 
-If you need a dynamic interface to Perl, Python2, Python3.8, Ruby or Lua make
-sure your system provides the needed dynamic libraries (e.g. libperlX,
-libpython2.7 libpython3X liblua5X and librubyX) as those are **not**
-distributed together with the image to not make the image too large.
-
-However, Vim will work without those libraries, but some Plugin might need those additional dependency.
-This means, those interpreters have to be installed in addition to Vim. Without it Vim
-won't be able to use that feature!
+The vim / gvim AppImage's are built with Vim interfaces for Perl, Python3, Ruby
+and Lua. See the release notes for usage and details.
 
 See: https://github.com/vim/vim
