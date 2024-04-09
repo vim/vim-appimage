@@ -147,11 +147,10 @@ jobs:
           git push --follow-tags -u origin "${GITHUB_REF_NAME}"
 
       - name: Release
-        uses: softprops/action-gh-release@v2
-        with:
-          body_path: release.body
-          name: 'Vim: ${{ steps.commit.outputs.tag_name }}'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ steps.commit.outputs.tag_name }}
-          files: |
-            *.AppImage
-            *.zsync
+        run: |
+          gh release create "$tag_name" \
+            *.AppImage *.zsync \
+            -F release.body -t "Vim: $tag_name"
