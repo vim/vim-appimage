@@ -20,10 +20,10 @@ jobs:
 
       - name: Get latest tags
         id: latest-tags
-        uses: octokit/graphql-action@v2.x
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
+          owner: ${{ steps.param.outputs.owner }}
+          repo: ${{ steps.param.outputs.repo }}
           query: |
             query($owner:String!,$repo:String!) {
               appimage: repository(owner:$owner, name:$repo) {
@@ -45,16 +45,19 @@ jobs:
                 }
               }
             }
-          owner: ${{ steps.param.outputs.owner }}
-          repo: ${{ steps.param.outputs.repo }}
+          jq_extract: >+
+            "vim_tag=" + .data.vim.refs.edges[0].node.name,
+            "appimage_tag=" + .data.appimage.refs.edges[0].node.name
+        run: |
+          gh api graphql -F owner="$owner" -F repo="$repo" -f query="$query" --jq "$jq_extract" | \
+            tee -a "$GITHUB_ENV"
 
       - name: Check updates
         id: check-updates
         run: |
-          appimage_tag=${{ fromJSON(steps.latest-tags.outputs.data).appimage.refs.edges[0].node.name }}
-          vim_tag=${{ fromJSON(steps.latest-tags.outputs.data).vim.refs.edges[0].node.name }}
-          echo "appimagetag=${appimage_tag}" >> "$GITHUB_OUTPUT"
-          echo "updated=$([[ ${appimage_tag} != ${vim_tag} ]] && echo true)" >> "$GITHUB_OUTPUT"
+          printf >> "$GITHUB_OUTPUT" '%s\n' \
+           "appimagetag=${appimage_tag}" \
+           "updated=$([[ ${appimage_tag} != ${vim_tag} ]] && echo true)"
 
   create-appimage-job:
     runs-on: ubuntu-20.04
