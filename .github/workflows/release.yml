@@ -95,7 +95,8 @@ jobs:
             desktop-file-utils \
             libtool-bin \
             at-spi2-core \
-            libsodium-dev
+            libsodium-dev \
+            gcc-10
 
       - name: Update Vim
         run: |
