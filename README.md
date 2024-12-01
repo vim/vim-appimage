@@ -28,3 +28,10 @@ The vim / gvim AppImage's are built with Vim interfaces for Perl, Python3, Ruby
 and Lua. See the release notes for usage and details.
 
 See: https://github.com/vim/vim
+
+# License
+
+The Vim license applies (see [:h
+license](http://vimhelp.appspot.com/uganda.txt.html#license)) to all the build
+scripts in this repository. Note, that Vim is included as a submodule and comes
+with its own license (although is also released under the Vim license).
