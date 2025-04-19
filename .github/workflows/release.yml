@@ -60,7 +60,7 @@ jobs:
            "updated=$([[ ${appimage_tag} != ${vim_tag} ]] && echo true)"
 
   create-appimage-job:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     needs: check-updates-job
 
