@@ -84,7 +84,7 @@ jobs:
             gettext \
             libcanberra-dev \
             libperl-dev \
-            python-dev \
+            python2-dev \
             python3.8-dev \
             liblua5.3-dev \
             lua5.3 \
