@@ -1,5 +1,5 @@
 diff --git a/src/testdir/test_gui.vim b/src/testdir/test_gui.vim
-index 29259345c..9cbcadcba 100644
+index 9d319960b..4f81d0a22 100644
 --- a/src/testdir/test_gui.vim
 +++ b/src/testdir/test_gui.vim
 @@ -770,6 +770,9 @@ func Test_set_guioptions()
@@ -9,6 +9,6 @@ index 29259345c..9cbcadcba 100644
 +  if v:true
 +    throw 'Skipped: Disabling test on Vim-Appimage Repository'
 +  endif
-   " this test sometimes fails on CI
-   let g:test_is_flaky = 1
- 
+   " buffer with 200 lines
+   call setline(1, repeat(['one', 'two'], 100))
+   set scrolloff=0
