@@ -8,7 +8,7 @@ everywhere by simply downloading the image and starting it. For more
 information about the package format see here: [AppImage](https://appimage.org).
 
 The image is based on Ubuntu ~~20.04 LTS focal~~ 22.04 LTS jammy (since commit
-[1bfa21b][1bfa21] because Github retired the Ubuntu
+[1bfa21b][1bfa21b] because Github retired the Ubuntu
 20.04 images in April 2025)
 
 The Appimage most likely won't work on older distributions. If you require a
