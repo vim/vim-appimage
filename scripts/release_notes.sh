@@ -31,7 +31,7 @@ $vimlog_md
 ### What is the Difference between the GVim and the Vim Appimage?
 The difference between the GVim and Vim Appimage is, that the GVim version includes a graphical User Interface (GTK3) and other X11 features like clipboard handling. That means, for proper clipboard support, you'll **need** the GVim Appimage, but you can only run this on a system that has the X11 libraries installed. <p/>
 
-For a Server or headless environment, you are probably be better with the Vim version.<p/> _Note_: The image is based on Ubuntu 20.04 LTS focal. It most likely won't work on older distributions.
+For a Server or headless environment, you are probably be better with the Vim version.<p/> _Note_: The image is based on Ubuntu 22.04 LTS jammy. It most likely won't work on older distributions.
 
 ### Run it
 Download the AppImage, make it executable then you can just run it:
@@ -56,7 +56,7 @@ Then execute \`vim.appimage\` to get a terminal Vim.
 
 ### Interpreter interfaces
 
-The Vim / GVim AppImage's are compiled with Vim interfaces for Perl 5.30, Python 3.8+, Ruby 2.7, and Lua 5.3 and built on Ubuntu 20.04 ("focal"). If your system runs this exact version of Ubuntu (or some compatible flavor), and has the corresponding interpreter packages installed, they will work just as in a native Vim distro package.
+The Vim / GVim AppImage's are compiled with Vim interfaces for Perl 5.30, Python 3.8+, Ruby 2.7, and Lua 5.3 and built on Ubuntu 22.04 ("jammy"). If your system runs this exact version of Ubuntu (or some compatible flavor), and has the corresponding interpreter packages installed, they will work just as in a native Vim distro package.
 
 Otherwise,
 * for Python 3: install it on your system. In Vim, \`set pythonthreedll=libpython3.10.so\` or similar (use the shell command \`sudo ldconfig -p | grep libpython3\` to find the library name). See \`:help +python3/dyn-stable\`.
