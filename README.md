@@ -8,7 +8,7 @@ everywhere by simply downloading the image and starting it. For more
 information about the package format see here: [AppImage](https://appimage.org).
 
 The image is based on Ubuntu ~~20.04 LTS focal~~ 22.04 LTS jammy (since commit
-1bfa21bf90229c2f5ef8ec2f72bb5a074caa0949 because Github retired the Ubuntu
+[1bfa21b][1bfa21] because Github retired the Ubuntu
 20.04 images in April 2025)
 
 The Appimage most likely won't work on older distributions. If you require a
@@ -37,6 +37,7 @@ license](http://vimhelp.appspot.com/uganda.txt.html#license)) to all the build
 scripts in this repository. Note, that Vim is included as a submodule and comes
 with its own license (although is also released under the Vim license).
 
+[1bfa21b]: https://github.com/vim/vim-appimage/commit/1bfa21bf90229c2f5ef8ec2f72bb5a074caa0949
 [v9.0.1413]: https://github.com/vim/vim-appimage/releases/tag/v9.0.1413
 [v9.1.1301]: https://github.com/vim/vim-appimage/releases/tag/v9.1.1301
-[Downloads]: https://github.com/vim/vim-appimage/releases
+[Download]: https://github.com/vim/vim-appimage/releases
