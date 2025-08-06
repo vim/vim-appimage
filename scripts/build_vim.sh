@@ -36,7 +36,7 @@ cd "${SRCDIR}"
 rm -rf vim
 SHADOWDIR=vim make -e shadow
 pushd vim
-ADDITIONAL_ARG="--without-x --enable-gui=no --enable-fail-if-missing"
+ADDITIONAL_ARG="--without-x --enable-gui=no --enable-fail-if-missing --without-wayland"
 ./configure --with-features=$FEATURES "${CFG_OPTS[@]}" $ADDITIONAL_ARG
 make -j$NPROC
 popd
