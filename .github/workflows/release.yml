@@ -74,7 +74,7 @@ jobs:
       VIM_REF: ${{ needs.check-updates-job.outputs.appimagetag }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install packages
         run: |
