@@ -39,7 +39,7 @@ set -ue
 : "${ARGV0:=$0}"  # run without AppImage too
 this_dir=$(readlink -f "$0")
 this_dir=${this_dir%/*}  # empty for '/'
-VIMRUNTIME=${this_dir}/usr/share/vim/vim91; export VIMRUNTIME
+VIMRUNTIME=${this_dir}/usr/share/vim/vim92; export VIMRUNTIME
 test -x "${this_dir}/usr/bin/gvim" || ARGV0=/vim
 case "${ARGV0##*/}" in
   (vim*) set -- "${this_dir}/usr/bin/vim"  "$@" ;;

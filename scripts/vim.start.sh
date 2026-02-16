@@ -4,7 +4,7 @@ if [ -z "$VIM" ]; then
     export VIM=$APPDIR/usr/share/vim
 fi
 if [ -z "$VIMRUNTIME" ]; then
-    export VIMRUNTIME=$APPDIR/usr/share/vim/vim91
+    export VIMRUNTIME=$APPDIR/usr/share/vim/vim92
 fi
 
 export GIO_MODULE_DIR=$APPDIR/usr/lib/x86_64-linux-gnu/gio/modules
